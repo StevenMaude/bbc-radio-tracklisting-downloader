@@ -1,23 +1,3 @@
-#!/usr/bin/env python
-
-# bbc_radio_tracklisting_downloader: Download radio tracklistings from
-# BBC's website and outputs to a text file.
-
-# Copyright 2013 Steven Maude
-
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 from __future__ import print_function
 from bs4 import BeautifulSoup
 import urllib
@@ -34,8 +14,9 @@ base_URL = 'http://www.bbc.co.uk/programmes/'
 try:
     pid = sys.argv[1]
 except IndexError:
-    print("bbc-tracklist.py: Download tracklistings for BBC radio programmes")
-    print("Usage: bbc-tracklist.py BBC_programme_id")
+    print(  "tlist.py: Download tracklistings for Radio 1, 6 Music and maybe"
+            " other BBC stations...")
+    print("Usage: tlist.py <BBC pid>")
     sys.exit()
 
 print("Opening web page: " + base_URL + pid)
@@ -49,6 +30,7 @@ except (IOError, NameError) as e:
     print("No network connection?")
     sys.exit()
 
+html.close()
 print("Extracting data...")
 
 try:
@@ -87,13 +69,29 @@ except AttributeError:
 listing = []
 
 for each in hits:
-    artist = None
-    track = None
-    label = None
-    art = each.find(class_="artist")
-    trk = each.find(class_="title")
-    lbl = each.find(class_="record-label")
-    listing.append((art.get_text(), trk.get_text(), lbl.get_text()))
+    #artist = None
+    #track = None
+    #label = None
+    artist = each.find(class_="artist")
+    track = each.find(class_="title")
+    label = each.find(class_="record-label")
+
+    if artist != None:
+        art = artist.get_text()
+    else:
+        art = ''
+
+    if track != None:
+        trk = track.get_text()
+    else:
+        art = ''
+
+    if label != None:
+        lbl = label.get_text()
+    else:
+        lbl = ''
+
+    listing.append((art, trk, lbl))
     #print(each)
     # group_title = each.find('h3')
     #if group_title != None:
@@ -112,6 +110,7 @@ for each in hits:
 with open(pid + '.txt', 'w') as textfile:
     textfile.write(title + '\n')
     textfile.write(date + '\n\n')
+    written_first_entry = False
     for (artist, track, label) in listing:
         # encode handles unicode characters
         line = (artist + ' - ' + track).encode('utf-8')
