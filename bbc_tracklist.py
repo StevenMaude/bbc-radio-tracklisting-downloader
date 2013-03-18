@@ -20,6 +20,7 @@
 
 from __future__ import print_function
 from bs4 import BeautifulSoup
+import contextlib
 import urllib
 import sys
 import time
