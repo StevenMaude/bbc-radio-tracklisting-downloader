@@ -43,14 +43,13 @@ print("Opening web page: " + base_URL + pid)
 # get html
 # change to with statement here?
 try:
-    html = urllib.urlopen(base_URL + pid)
-    soup = BeautifulSoup(html.read())
+    with contextlib.closing(urllib.urlopen(base_URL + pid)) as html:
+        soup = BeautifulSoup(html.read())
 except (IOError, NameError) as e:
     print("Error opening web page.")
     print("No network connection?")
     sys.exit()
 
-html.close()
 print("Extracting data...")
 
 try:
