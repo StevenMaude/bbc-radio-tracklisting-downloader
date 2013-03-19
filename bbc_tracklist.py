@@ -27,11 +27,9 @@ import time
 
 ##def main():
 base_URL = 'http://www.bbc.co.uk/programmes/'
-## iterate over directory and subdirectories and try to download all
-## tracklistings for mp3s?
 
 # programme id
-# gets from command line argument
+# get from command line argument
 try:
     pid = sys.argv[1]
 except IndexError:
@@ -41,6 +39,7 @@ except IndexError:
     sys.exit()
 
 print("Opening web page: " + base_URL + pid)
+
 # get html
 # change to with statement here?
 try:
@@ -51,6 +50,7 @@ except (IOError, NameError) as e:
     print("No network connection?")
     sys.exit()
 
+#html.close()
 print("Extracting data...")
 
 try:
@@ -67,19 +67,6 @@ try:
     # figure out how to convert this object into a datetime one
     #time.strptime(date, "%a %d %b %Y")
 
-    ##print(title)
-    ##print(date)
-    ##print('***')
-    # po:short_synopsis?
-    # handle po:SpeechSegment?
-    # e.g. b01pzszx
-    # don't know how to get the titles as well
-    # could do
-    # hit = soup.findAll(['li', 'h3'])
-    # but duplicates artists, tracks and labels then...
-    # hit = soup.findAll('li')
-    hits = soup.findAll(typeof=['po:MusicSegment', 'po:SpeechSegment'])
-
 except AttributeError:
     print("Error processing web page.")
     print("Bad programme id?")
@@ -88,49 +75,63 @@ except AttributeError:
 # store (artist, track, record label) in listing as list of tuples
 listing = []
 
-for each in hits:
-    #artist = None
-    #track = None
-    #label = None
-    artist = each.find(class_="artist")
-    track = each.find(class_="title")
-    label = each.find(class_="record-label")
+# see http://stackoverflow.com/questions/15484134
+# could handle <h3 class="group title"> too, but don't know if really
+# necessary; I think it distracts a little from the listing...
+# soup.findAll('h3', class_='group-title')
+for each in soup.findAll(typeof=['po:MusicSegment', 'po:SpeechSegment']):
+    if each['typeof'] == 'po:MusicSegment':
+        artist = each.find(class_="artist")
+        track = each.find(class_="title")
+        label = each.find(class_="record-label")
 
-    if artist != None:
-        art = artist.get_text()
-    else:
-        art = ''
+        if artist != None:
+            art = artist.get_text()
+        else:
+            art = ''
 
-    if track != None:
-        trk = track.get_text()
-    else:
-        art = ''
+        if track != None:
+            trk = track.get_text()
+        else:
+            trk = ''
 
-    if label != None:
-        lbl = label.get_text()
-    else:
-        lbl = ''
+        if label != None:
+            lbl = label.get_text()
+        else:
+            lbl = ''
 
-    listing.append((art, trk, lbl))
-    #print(each)
-    # group_title = each.find('h3')
-    #if group_title != None:
-    #    print(group_title.get_text())
-    #    print(group_title)
-    #if artist != None:
-    #    print(artist.get_text())
-    #if track != None:
-    #    print(track.get_text())
-    #if label != None:
-    #    print(label.get_text())
-    #if artist != None or track != None or label != None:
-    #    print('***')
+        listing.append((art, trk, lbl))
+    elif each['typeof'] == 'po:SpeechSegment':
+        artist = each.find(class_="artist")
+        track = each.find(class_="title")
+        ##label = each.find(class_="record-label")
+
+        if artist != None:
+            art = artist.get_text()
+        else:
+            art = ''
+
+        if track != None:
+            trk = track.get_text()
+        else:
+            trk = ''
+        # need to check this is always the case
+        # may not exist in some cases, so maybe need a try/except KeyError here
+        if each.p['property'] == 'po:short_synopsis':
+            # better way to check
+            syn = each.p.get_text()
+        else:
+            syn = ''
+
+        listing.append((art, trk, syn))
 
 # also need to handle writing output to file
 with open(pid + '.txt', 'w') as textfile:
     textfile.write(title + '\n')
     textfile.write(date + '\n\n')
     written_first_entry = False
+    # could check whether music or speech
+    # then remove gap as appropriate...
     for (artist, track, label) in listing:
         # encode handles unicode characters
         line = (artist + ' - ' + track).encode('utf-8')
