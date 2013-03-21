@@ -16,4 +16,4 @@ Run bbc_tracklist.py from the command line. The required argument is the BBC pro
 ### Dependencies and issues
 * Tested on Python 2.7.3 on Windows (Windows 7 64-bit) and Linux (Raspbian).
 * Requires [BeautifulSoup 4.1.3](http://www.crummy.com/software/BeautifulSoup/)
-* Doesn't handle po:SpeechSegment and po:short_synopsis sections yet; need to fix this.
+* Handling of po:SpeechSegment and po:short_synopsis sections needs testing.
