@@ -18,116 +18,148 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+## maybe iterate over directory and subdirectories and try to download all
+## tracklistings for mp3s?
 from __future__ import print_function
 from bs4 import BeautifulSoup
-import contextlib
+import os
 import urllib
 import sys
 import time
 
 ##def main():
-base_URL = 'http://www.bbc.co.uk/programmes/'
-## iterate over directory and subdirectories and try to download all
-## tracklistings for mp3s?
+def open_listing_page(pid):
+    """
+    Opens a BBC radio tracklisting page based on pid. Returns a BeautifulSoup
+    object derived from that page.
 
-# programme id
-# gets from command line argument
-try:
-    pid = sys.argv[1]
-except IndexError:
-    print(  "tlist.py: Download tracklistings for Radio 1, 6 Music and maybe"
-            " other BBC stations...")
-    print("Usage: tlist.py <BBC pid>")
-    sys.exit()
-
-print("Opening web page: " + base_URL + pid)
-# get html
-# change to with statement here?
-try:
-    with contextlib.closing(urllib.urlopen(base_URL + pid)) as html:
+    pid: programme id
+    """
+    base_URL = 'http://www.bbc.co.uk/programmes/'
+    print("Opening web page: " + base_URL + pid)
+    ## change to with statement here?
+    # get html
+    try:
+        html = urllib.urlopen(base_URL + pid)
         soup = BeautifulSoup(html.read())
-except (IOError, NameError) as e:
-    print("Error opening web page.")
-    print("No network connection?")
-    sys.exit()
+    except (IOError, NameError) as e:
+        print("Error opening web page.")
+        print("Check network connection and/or programme id.")
+        sys.exit()
 
-print("Extracting data...")
+    html.close()
+    return soup
 
-try:
-    # get radio station as string
-    station = soup.find('a', class_='logo-area masterbrand-logo'\
-                ).find(class_='title').get_text()
+def extract_listing(soup):
+    """
+    Returns listing, a list of (artist, track, record label) tuples,
+    programme title (string) and programme date (string).
 
-    # get programme title
-    title = (soup.title.get_text()).strip()
+    soup: BeautifulSoup object.
+    """
+    print("Extracting data...")
+    try:
+        # get radio station as string
+        station = soup.find('a', class_='logo-area masterbrand-logo'\
+                    ).find(class_='title').get_text()
 
-    # get programme date
-    date = soup.find(datatype="xsd:date").get_text()
+        # get programme title
+        title = (soup.title.get_text()).strip()
 
-    # figure out how to convert this object into a datetime one
-    #time.strptime(date, "%a %d %b %Y")
+        # get programme date
+        date = soup.find(datatype="xsd:date").get_text()
 
-    ##print(title)
-    ##print(date)
-    ##print('***')
-    # po:short_synopsis?
-    # handle po:SpeechSegment?
-    # e.g. b01pzszx
-    # don't know how to get the titles as well
-    # could do
-    # hit = soup.findAll(['li', 'h3'])
-    # but duplicates artists, tracks and labels then...
-    # hit = soup.findAll('li')
-    hits = soup.findAll(typeof=['po:MusicSegment', 'po:SpeechSegment'])
+        # figure out how to convert this object into a datetime one
+        #time.strptime(date, "%a %d %b %Y")
 
-except AttributeError:
-    print("Error processing web page.")
-    print("Bad programme id?")
-    sys.exit()
+        ##print(title)
+        ##print(date)
+        ##print('***')
+        # po:short_synopsis?
+        # handle po:SpeechSegment?
+        # e.g. b01pzszx
+        # don't know how to get the titles as well
+        # could do
+        # hit = soup.findAll(['li', 'h3'])
+        # but duplicates artists, tracks and labels then...
+        # hit = soup.findAll('li')
+        hits = soup.findAll(typeof=['po:MusicSegment', 'po:SpeechSegment'])
 
-# store (artist, track, record label) in listing as list of tuples
-listing = []
+    except AttributeError:
+        print("Error processing web page.")
+        print("Bad programme id?")
+        sys.exit()
 
-for each in hits:
-    #artist = None
-    #track = None
-    #label = None
-    artist = each.find(class_="artist")
-    track = each.find(class_="title")
-    label = each.find(class_="record-label")
+    # store (artist, track, record label) in listing as list of tuples
+    listing = []
 
-    if artist != None:
-        art = artist.get_text()
-    else:
-        art = ''
+    for each in hits:
+        #artist = None
+        #track = None
+        #label = None
+        artist = each.find(class_="artist")
+        track = each.find(class_="title")
+        label = each.find(class_="record-label")
 
-    if track != None:
-        trk = track.get_text()
-    else:
-        art = ''
+        if artist != None:
+            art = artist.get_text()
+        else:
+            art = ''
 
-    if label != None:
-        lbl = label.get_text()
-    else:
-        lbl = ''
+        if track != None:
+            trk = track.get_text()
+        else:
+            art = ''
 
-    listing.append((art, trk, lbl))
-    #print(each)
-    # group_title = each.find('h3')
-    #if group_title != None:
-    #    print(group_title.get_text())
-    #    print(group_title)
-    #if artist != None:
-    #    print(artist.get_text())
-    #if track != None:
-    #    print(track.get_text())
-    #if label != None:
-    #    print(label.get_text())
-    #if artist != None or track != None or label != None:
-    #    print('***')
+        if label != None:
+            lbl = label.get_text()
+        else:
+            lbl = ''
+
+        listing.append((art, trk, lbl))
+        #print(each)
+        # group_title = each.find('h3')
+        #if group_title != None:
+        #    print(group_title.get_text())
+        #    print(group_title)
+        #if artist != None:
+        #    print(artist.get_text())
+        #if track != None:
+        #    print(track.get_text())
+        #if label != None:
+        #    print(label.get_text())
+        #if artist != None or track != None or label != None:
+        #    print('***')
+    return listing, title, date
 
 # also need to handle writing output to file
-with open(pid + '.txt', 'w') as textfile:
+def write_tracklisting_to_text(listing, pid, title, date, output):
+    """
+    Write tracklisting to a text file.
+
+    listing: list of (artist, track, record label) tuples
+    pid: programme id
+    title: programme title
+    date: date of programme broadcast
+    output: output filename
+    """
+    # handle this invalid filename
+    try:
+        with open(output, 'w') as textfile:
+            write_output(textfile, listing, title, date)
+    except IOError:
+        print("Cannot write output. Check write permissions.")
+        sys.exit()
+
+def write_output(textfile, listing, title, date):
+    """
+    Writes artist, track, label to text file.
+
+    textfile: file object
+    listing: list of (artist, track, record label) tuples
+    title: programme title
+    date: programme date
+    """
     textfile.write(title + '\n')
     textfile.write(date + '\n\n')
     written_first_entry = False
@@ -139,6 +171,40 @@ with open(pid + '.txt', 'w') as textfile:
         textfile.write((label + '\n').encode('utf-8'))
         textfile.write('***'.encode('utf-8'))
         textfile.write('\n'.encode('utf-8'))
+
+def get_output_path():
+    """
+    Returns a file path
+    """
+    # if filename and path provided, use these for output text file
+    if len(sys.argv) == 4:
+        path = sys.argv[2]
+        filename = sys.argv[3] + '.txt'
+        output = os.path.join(path, filename)
+    # otherwise set output to current path
+    else:
+        output = pid + '.txt'
+    return output
+
+# programme id get from command line argument
+try:
+    pid = sys.argv[1]
+except IndexError:
+    print("bbc_tracklist.py: Download tracklistings for Radio 1, 6 Music and "
+            "maybe other BBC stations..." + '\n')
+    print("Usage: tlist.py BBC_pid [directory] [filename].")
+    print("Only BBC_pid is required, but to specify a path, both "
+            "[directory] and [filename] are required.")
+    print("If either [directory] or [filename] are omitted, output "
+            "will be to the current path.")
+    sys.exit()
+
+# open the page, extract the contents and output to text
+soup = open_listing_page(pid)
+listing, title, date = extract_listing(soup)
+output = get_output_path()
+print (output)
+write_tracklisting_to_text(listing, pid, title, date, output)
 
 print("Done!")
 
