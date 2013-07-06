@@ -5,7 +5,7 @@ Licensed under GPL v3 (see COPYING).
 ### Usage examples
 Run `bbc_tracklist.py` from the command line. The required argument is the BBC programme id, the 8 characters that are found at the end of iPlayer URLs such as:`http://www.bbc.co.uk/iplayer/episode/<programme id>/<programme name>` or programme information URLs such as: `http://www.bbc.co.uk/programmes/<programme id>`. 
 
-Optional arguments are <directory> and <filename>. If either of these are omitted, output will be to the current path.
+Optional arguments are `<directory>` and `<filename>`. If either of these are omitted, output will be to the current path.
 
 The output is a text file named `<pid>.txt` of the format:
 `Programme title`    
