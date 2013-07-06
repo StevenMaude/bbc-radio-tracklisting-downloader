@@ -21,5 +21,5 @@ If downloading a radio programme with [get_iplayer](http://www.infradead.org/get
 ***
 ### Dependencies and issues
 * Tested on Python 2.7.3 on Windows (Windows 7 64-bit) and Linux (Raspbian).
-* Requires [BeautifulSoup 4.1.3](http://www.crummy.com/software/BeautifulSoup/)
+* Tested with [BeautifulSoup 4.1.3](http://www.crummy.com/software/BeautifulSoup/); later versions should be fine.
 * po:short_synopsis sections not handled yet.
