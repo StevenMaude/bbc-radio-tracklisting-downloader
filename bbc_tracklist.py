@@ -203,7 +203,7 @@ except IndexError:
 soup = open_listing_page(pid)
 listing, title, date = extract_listing(soup)
 output = get_output_path()
-print (output)
+#print (output)
 write_tracklisting_to_text(listing, pid, title, date, output)
 
 print("Done!")
