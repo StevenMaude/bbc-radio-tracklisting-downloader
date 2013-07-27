@@ -17,7 +17,7 @@ The output is a text file named `<pid>.txt` of the format:
 `***`
 ***
 ### get_iplayer usage
-If downloading a radio programme with [get_iplayer](http://www.infradead.org/get_iplayer/html/get_iplayer.html), adding an argument of the form `--command "/home/get_iplayer/bbc_tracklist.py <pid> <dir> <fileprefix>` should result in a text file containing the tracklisting in the same directory as your downloaded audio file. (Change `/home/get_iplayer` to point to wherever the script is located.)
+If downloading a radio programme with [get_iplayer](http://www.infradead.org/get_iplayer/html/get_iplayer.html), adding an argument of the form `--command "/home/get_iplayer/bbc_tracklist.py <pid> <dir> <fileprefix>"` should result in a text file containing the tracklisting in the same directory as your downloaded audio file. (Change `/home/get_iplayer` to point to wherever the script is located.)
 ***
 ### Dependencies and issues
 * Tested on Python 2.7.3 on Windows (Windows 7 64-bit) and Linux (Raspbian).
