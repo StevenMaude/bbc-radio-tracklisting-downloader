@@ -45,7 +45,7 @@ import imghdr
 import os
 import logging
 import traceback
-from beets.util.enumeration import enum
+from enumeration import enum
 
 __all__ = ['UnreadableFileError', 'FileTypeError', 'MediaFile']
 
