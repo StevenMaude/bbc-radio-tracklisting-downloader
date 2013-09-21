@@ -259,7 +259,7 @@ except IndexError:
 # open the page, extract the contents and output to text
 soup = open_listing_page(pid)
 listing, title, date = extract_listing(soup)
-output = get_output_path()
+output = get_output_filename()
 #print (output)
 
 # TODO:
