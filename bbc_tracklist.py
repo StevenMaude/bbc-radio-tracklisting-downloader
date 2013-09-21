@@ -196,6 +196,21 @@ def write_output(textfile, listing, title, date):
         textfile.write('\n'.encode('utf-8'))
 
 
+def get_output_filename():
+    """
+    Returns a file path.
+    """
+    # if filename and path provided, use these for output text file
+    if len(sys.argv) == 4:
+        path = sys.argv[2]
+        filename = sys.argv[3]
+        output = os.path.join(path, filename)
+    # otherwise set output to current path
+    else:
+        output = pid
+    return output
+
+
 def get_output_path():
     """
     Returns a file path
