@@ -25,7 +25,7 @@ from bs4 import BeautifulSoup
 import os
 import urllib
 import sys
-import time
+#import time
 import mediafile
 
 
@@ -185,10 +185,10 @@ def write_output(textfile, listing, title, date):
     """
     textfile.write(title + '\n')
     textfile.write(date + '\n\n')
-    written_first_entry = False
+    #written_first_entry = False
     for (artist, track, label) in listing:
         # encode handles unicode characters
-        line = (artist + ' - ' + track).encode('utf-8')
+        #line = (artist + ' - ' + track).encode('utf-8')
         textfile.write((artist + '\n').encode('utf-8'))
         textfile.write((track + '\n').encode('utf-8'))
         textfile.write((label + '\n').encode('utf-8'))
