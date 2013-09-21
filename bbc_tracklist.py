@@ -201,10 +201,11 @@ def output_to_file(filename, tracklisting):
     # if writing to either type of file fails
     # try writing to text file instead
     if not(tag_audio_file(filename + '.m4a', tracklisting) or
-           tag_audio_file(filename + '.mp3')):
+           tag_audio_file(filename + '.mp3', tracklisting)):
         print("Cannot find or access any relevant audio file.")
         try:
-            write_listing_to_textfile(filename + '.txt')
+            print(tracklisting)
+            write_listing_to_textfile(filename + '.txt', tracklisting)
         except IOError:
             # if all else fails, just print listing
             print("Cannot write text file in specified path!")
