@@ -198,7 +198,7 @@ def write_output(textfile, listing, title, date):
 
 def get_output_filename():
     """
-    Returns a file path.
+    Returns a filename without an extension.
     """
     # if filename and path provided, use these for output text file
     if len(sys.argv) == 4:
