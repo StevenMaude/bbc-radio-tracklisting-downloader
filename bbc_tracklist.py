@@ -28,7 +28,7 @@ import sys
 import time
 import mediafile
 
-##def main():
+
 def open_listing_page(pid):
     """
     Opens a BBC radio tracklisting page based on pid. Returns a BeautifulSoup
@@ -50,6 +50,7 @@ def open_listing_page(pid):
 
     html.close()
     return soup
+
 
 def extract_listing(soup):
     """
@@ -133,7 +134,7 @@ def extract_listing(soup):
         #    print('***')
     return listing, title, date
 
-# also need to handle writing output to file
+
 def write_tracklisting_to_text(listing, pid, title, date, output):
     """
     Write tracklisting to a text file.
@@ -173,6 +174,7 @@ def write_output(textfile, listing, title, date):
         textfile.write('***'.encode('utf-8'))
         textfile.write('\n'.encode('utf-8'))
 
+
 def get_output_path():
     """
     Returns a file path
@@ -186,6 +188,7 @@ def get_output_path():
     else:
         output = pid + '.txt'
     return output
+
 
 def tag_audio_file(audio_file, tracklisting):
     """
@@ -215,11 +218,14 @@ except IndexError:
             "will be to the current path.")
     sys.exit()
 
+
 # open the page, extract the contents and output to text
 soup = open_listing_page(pid)
 listing, title, date = extract_listing(soup)
 output = get_output_path()
 #print (output)
+
+# need a function which outputs either to tags or text file failing that
 write_tracklisting_to_text(listing, pid, title, date, output)
 
 print("Done!")
