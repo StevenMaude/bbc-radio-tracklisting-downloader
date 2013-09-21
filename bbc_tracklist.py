@@ -62,8 +62,8 @@ def extract_listing(soup):
     print("Extracting data...")
     try:
         # get radio station as string
-        station = soup.find('a', class_='logo-area masterbrand-logo'\
-                    ).find(class_='title').get_text()
+        station = soup.find('a', class_='logo-area masterbrand-logo'
+                            ).find(class_='title').get_text()
 
         # get programme title
         title = (soup.title.get_text()).strip()
