@@ -170,19 +170,9 @@ def get_output_filename():
     return output
 
 
-def get_output_path():
-    """
-    Returns a file path
-    """
-    # if filename and path provided, use these for output text file
-    if len(sys.argv) == 4:
-        path = sys.argv[2]
-        filename = sys.argv[3] + '.txt'
-        output = os.path.join(path, filename)
-    # otherwise set output to current path
-    else:
-        output = pid + '.txt'
-    return output
+def write_listing_to_textfile(textfile, tracklisting):
+    with open(textfile, 'wb+') as text:
+        text.write(tracklisting)
 
 
 def tag_audio_file(audio_file, tracklisting):
