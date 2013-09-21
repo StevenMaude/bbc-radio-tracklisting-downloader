@@ -171,7 +171,7 @@ def generate_output(listing, title, date):
         listing_string += (label + '\n').encode('utf-8')
         listing_string += '***'.encode('utf-8')
         listing_string += '\n'.encode('utf-8')
-    return
+    return listing_string
 
 
 def write_output(textfile, listing, title, date):
