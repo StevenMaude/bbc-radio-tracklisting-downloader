@@ -218,8 +218,8 @@ def tag_audio_file(audio_file, tracklisting):
     """
     try:
         f = mediafile.MediaFile(audio_file)
-        tag = ''.join(lines)
-        f.lyrics = tag
+        #tag = ''.join(lines)
+        f.lyrics = tracklisting
         f.save()
         return True
     except IOError:
