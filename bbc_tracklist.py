@@ -26,6 +26,7 @@ import os
 import urllib
 import sys
 import time
+import mediafile
 
 ##def main():
 def open_listing_page(pid):
@@ -185,6 +186,21 @@ def get_output_path():
     else:
         output = pid + '.txt'
     return output
+
+def tag_audio_file(audio_file, tracklisting):
+    """
+    Adds tracklisting as list to lyrics tag of audio file.
+    Returns True if successful, False if not.
+    """
+    try:
+        f = mediafile.MediaFile(audio_file)
+        tag = ''.join(lines)
+        f.lyrics = tag
+        f.save()
+        return True
+    except IOError:
+        print "Unable to save tag to file."
+        return False
 
 # programme id get from command line argument
 try:
