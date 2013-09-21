@@ -103,17 +103,17 @@ def extract_listing(soup):
         track = each.find(class_="title")
         label = each.find(class_="record-label")
 
-        if artist != None:
+        if artist is not None:
             art = artist.get_text()
         else:
             art = ''
 
-        if track != None:
+        if track is not None:
             trk = track.get_text()
         else:
             art = ''
 
-        if label != None:
+        if label is not None:
             lbl = label.get_text()
         else:
             lbl = ''
