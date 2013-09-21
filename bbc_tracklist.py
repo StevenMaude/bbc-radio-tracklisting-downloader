@@ -232,12 +232,12 @@ try:
     pid = sys.argv[1]
 except IndexError:
     print("bbc_tracklist.py: Download tracklistings for Radio 1, 6 Music and "
-            "maybe other BBC stations..." + '\n')
+          "maybe other BBC stations..." + '\n')
     print("Usage: tlist.py BBC_pid [directory] [filename].")
     print("Only BBC_pid is required, but to specify a path, both "
-            "[directory] and [filename] are required.")
+          "[directory] and [filename] are required.")
     print("If either [directory] or [filename] are omitted, output "
-            "will be to the current path.")
+          "will be to the current path.")
     sys.exit()
 
 
