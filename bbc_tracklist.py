@@ -187,7 +187,7 @@ def tag_audio_file(audio_file, tracklisting):
         f.save()
         return True
     except IOError:
-        print("Unable to save tag to file.")
+        print("Unable to save tag to file:", audio_file)
         return False
 
 
