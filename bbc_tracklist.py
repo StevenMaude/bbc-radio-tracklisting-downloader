@@ -144,7 +144,6 @@ def generate_output(listing, title, date):
     date: programme date
     """
     listing_string = title + '\n' + date + '\n'
-    print('gen_output', listing_string)
     for (artist, track, label) in listing:
         # listing_string += (artist + ' - ' + track).encode('utf-8')
         listing_string += (artist + '\n').encode('utf-8')
