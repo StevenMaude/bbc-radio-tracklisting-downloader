@@ -153,6 +153,27 @@ def write_tracklisting_to_text(listing, pid, title, date, output):
         print("Cannot write output. Check write permissions.")
         sys.exit()
 
+
+def generate_output(listing, title, date):
+    """
+    Returns a string containing a full tracklisting.
+
+    listing: list of (artist, track, record label) tuples
+    title: programme title
+    date: programme date
+    """
+    listing_string = ''
+
+    for (artist, track, label) in listing:
+        listing_string += (artist + ' - ' + track).encode('utf-8')
+        listing_string += (artist + '\n').encode('utf-8')
+        listing_string += (track + '\n').encode('utf-8')
+        listing_string += (label + '\n').encode('utf-8')
+        listing_string += '***'.encode('utf-8')
+        listing_string += '\n'.encode('utf-8')
+    return
+
+
 def write_output(textfile, listing, title, date):
     """
     Writes artist, track, label to text file.
