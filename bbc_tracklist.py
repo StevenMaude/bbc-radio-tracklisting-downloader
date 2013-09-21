@@ -135,25 +135,6 @@ def extract_listing(soup):
     return listing, title, date
 
 
-def write_tracklisting_to_text(listing, pid, title, date, output):
-    """
-    Write tracklisting to a text file.
-
-    listing: list of (artist, track, record label) tuples
-    pid: programme id
-    title: programme title
-    date: date of programme broadcast
-    output: output filename
-    """
-    # handle this invalid filename
-    try:
-        with open(output, 'w') as textfile:
-            write_output(textfile, listing, title, date)
-    except IOError:
-        print("Cannot write output. Check write permissions.")
-        sys.exit()
-
-
 def generate_output(listing, title, date):
     """
     Returns a string containing a full tracklisting.
@@ -172,28 +153,6 @@ def generate_output(listing, title, date):
         listing_string += '***'.encode('utf-8')
         listing_string += '\n'.encode('utf-8')
     return listing_string
-
-
-def write_output(textfile, listing, title, date):
-    """
-    Writes artist, track, label to text file.
-
-    textfile: file object
-    listing: list of (artist, track, record label) tuples
-    title: programme title
-    date: programme date
-    """
-    textfile.write(title + '\n')
-    textfile.write(date + '\n\n')
-    #written_first_entry = False
-    for (artist, track, label) in listing:
-        # encode handles unicode characters
-        #line = (artist + ' - ' + track).encode('utf-8')
-        textfile.write((artist + '\n').encode('utf-8'))
-        textfile.write((track + '\n').encode('utf-8'))
-        textfile.write((label + '\n').encode('utf-8'))
-        textfile.write('***'.encode('utf-8'))
-        textfile.write('\n'.encode('utf-8'))
 
 
 def get_output_filename():
