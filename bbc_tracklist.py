@@ -201,6 +201,25 @@ def tag_audio_file(audio_file, tracklisting):
         return False
 
 
+def output_to_file(filename, tracklisting):
+    """
+    Try tagging to audio file. Failing that fall back to writing to text
+    file.
+
+    filename: a string of path + filename without file extension
+    tracklisting: a string containing a tracklisting
+    """
+    if not tag_audio_file(filename + '.m4a', tracklisting) or \ 
+    if not tag_audio_file(filename + '.mp3'):
+        print("Cannot find or access relevant audio file.")
+        try:
+            write_listing_to_textfile(filename + '.txt')
+        except IOError:
+            print("Cannot write text file in specified path!")
+            print("Just printing tracklisting here instead.")
+            print tracklisting
+
+
 # programme id get from command line argument
 try:
     pid = sys.argv[1]
@@ -218,7 +237,8 @@ except IndexError:
 # open the page, extract the contents and output to text
 soup = open_listing_page(pid)
 listing, title, date = extract_listing(soup)
-output = get_output_filename()
+filename = get_output_filename()
+output_to_file(filename, listing)
 #print (output)
 
 # TODO:
@@ -228,7 +248,7 @@ output = get_output_filename()
 # if successful, exit
 # if not, save to text file in same dir (or current dir, failing that)
 # if none of these work, maybe print instead and exit
-write_tracklisting_to_text(listing, pid, title, date, output)
+#write_tracklisting_to_text(listing, pid, title, date, output)
 
 print("Done!")
 
