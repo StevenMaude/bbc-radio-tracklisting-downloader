@@ -247,7 +247,13 @@ listing, title, date = extract_listing(soup)
 output = get_output_path()
 #print (output)
 
+# TODO:
 # need a function which outputs either to tags or text file failing that
+# we have generate_output which gives a tracklisting
+# try doing tag_audio_file
+# if successful, exit
+# if not, save to text file in same dir (or current dir, failing that)
+# if none of these work, maybe print instead and exit
 write_tracklisting_to_text(listing, pid, title, date, output)
 
 print("Done!")
