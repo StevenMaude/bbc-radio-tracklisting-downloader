@@ -199,15 +199,18 @@ def output_to_file(filename, tracklisting):
     filename: a string of path + filename without file extension
     tracklisting: a string containing a tracklisting
     """
-    if not tag_audio_file(filename + '.m4a', tracklisting) or \ 
-    if not tag_audio_file(filename + '.mp3'):
-        print("Cannot find or access relevant audio file.")
+    # if writing to either type of file fails
+    # try writing to text file instead
+    if not(tag_audio_file(filename + '.m4a', tracklisting) or
+           tag_audio_file(filename + '.mp3')):
+        print("Cannot find or access any relevant audio file.")
         try:
             write_listing_to_textfile(filename + '.txt')
         except IOError:
+            # if all else fails, just print listing
             print("Cannot write text file in specified path!")
             print("Just printing tracklisting here instead.")
-            print tracklisting
+            print(tracklisting)
 
 
 # programme id get from command line argument
