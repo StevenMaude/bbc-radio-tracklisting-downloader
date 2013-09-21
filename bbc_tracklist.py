@@ -233,7 +233,6 @@ listing, title, date = extract_listing(soup)
 filename = get_output_filename()
 tracklisting = generate_output(listing, title, date)
 output_to_file(filename, tracklisting)
-#print (output)
 
 print("Done!")
 
