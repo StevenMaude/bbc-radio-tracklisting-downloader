@@ -204,7 +204,6 @@ def output_to_file(filename, tracklisting):
            tag_audio_file(filename + '.mp3', tracklisting)):
         print("Cannot find or access any relevant audio file.")
         try:
-            print(tracklisting)
             write_listing_to_textfile(filename + '.txt', tracklisting)
         except IOError:
             # if all else fails, just print listing
