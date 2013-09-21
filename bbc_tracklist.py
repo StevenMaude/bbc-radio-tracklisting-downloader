@@ -143,7 +143,7 @@ def generate_output(listing, title, date):
     title: programme title
     date: programme date
     """
-    listing_string = title + '\n' + date + '\n'
+    listing_string = title + '\n' + date + '\n\n'
     for (artist, track, label) in listing:
         # listing_string += (artist + ' - ' + track).encode('utf-8')
         listing_string += (artist + '\n').encode('utf-8')
@@ -183,6 +183,7 @@ def tag_audio_file(audio_file, tracklisting):
         #tag = ''.join(lines)
         f.lyrics = tracklisting
         f.save()
+        print("Saved tag to file:", audio_file)
         return True
     except IOError:
         print("Unable to save tag to file:", audio_file)
