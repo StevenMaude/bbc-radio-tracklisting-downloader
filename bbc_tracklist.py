@@ -231,7 +231,8 @@ except IndexError:
 soup = open_listing_page(pid)
 listing, title, date = extract_listing(soup)
 filename = get_output_filename()
-output_to_file(filename, listing)
+tracklisting = generate_output(listing, title, date)
+output_to_file(filename, tracklisting)
 #print (output)
 
 # TODO:
