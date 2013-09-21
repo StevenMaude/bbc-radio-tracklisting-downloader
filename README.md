@@ -2,6 +2,9 @@
 A Python script that downloads radio tracklistings from BBC's website and outputs to a text file.
 Licensed under GPL v3 (see COPYING).
 ***
+
+**This branch is being modified to enable adding a lyrics tag containing the tracklisting to the relevant audio file that has been downloaded with `get_iplayer`.**
+
 ### Usage examples
 Run `bbc_tracklist.py` from the command line. The required argument is the BBC programme id, the 8 characters that are found at the end of iPlayer URLs such as:`http://www.bbc.co.uk/iplayer/episode/<programme id>/<programme name>` or programme information URLs such as: `http://www.bbc.co.uk/programmes/<programme id>`. 
 
