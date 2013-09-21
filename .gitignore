@@ -1,3 +1,8 @@
+bin/
+include/
+lib/
+local/
+share/
 *.m4a
 *.txt
 *.pyc
