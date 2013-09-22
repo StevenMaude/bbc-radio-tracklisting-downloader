@@ -27,7 +27,7 @@ If downloading a radio programme with [get_iplayer](http://www.infradead.org/get
 ***
 ### Dependencies and issues
 * Tagging of M4A files seems to break playback in [Rockbox](http://www.rockbox.org), though they appear to play OK on e.g. Rhythmbox, foobar2000. MP3s seem unaffected.
-* Requires BeautfulSoup and mutagen; `pip install -r requirements.txt` should install everything you need.
+* Requires [BeautfulSoup]((http://www.crummy.com/software/BeautifulSoup/) and [mutagen](http://code.google.com/p/mutagen/); `pip install -r requirements.txt` should install everything you need.
 * Tested on Python 2.7.3 on Windows (Windows 7 64-bit) and Linux (Raspbian). (I suspect it doesn't work with Python versions earlier than this due to improvements in Python's HTMLParser introduced in 2.7.3.)
-* Tested with [BeautifulSoup 4.1.3](http://www.crummy.com/software/BeautifulSoup/); later versions should be fine.
+* Tested with BeautifulSoup 4.1.3; later versions should be fine.
 * po:short_synopsis sections not handled yet.
