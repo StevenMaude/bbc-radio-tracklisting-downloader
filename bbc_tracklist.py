@@ -220,10 +220,10 @@ try:
 except IndexError:
     print("bbc_tracklist.py: Download tracklistings for Radio 1, 6 Music and "
           "maybe other BBC stations..." + '\n')
-    print("Usage: tlist.py BBC_pid [directory] [filename].")
-    print("Only BBC_pid is required, but to specify a path, both "
-          "[directory] and [filename] are required.")
-    print("If either [directory] or [filename] are omitted, output "
+    print("Usage: bbc_tracklist.py BBC_pid [directory] [filename prefix].")
+    print("Only BBC_pid is required, but to specify a file, both "
+          "[directory] and [filename prefix] are required.")
+    print("If either [directory] or [filename prefix] are omitted, output "
           "will be to the current path.")
     sys.exit()
 
