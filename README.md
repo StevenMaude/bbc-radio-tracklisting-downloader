@@ -1,5 +1,5 @@
 ## bbc_radio_tracklisting_downloader.py
-A Python script that downloads radio tracklistings from BBC's website and outputs to a text file.
+A Python script that downloads radio tracklistings from BBC's website and tags MP3 or M4A audio files or outputs to a text file.
 Licensed under GPL v3 (see COPYING).
 ***
 
