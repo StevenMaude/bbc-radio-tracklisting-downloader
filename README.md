@@ -3,16 +3,16 @@ A Python script that downloads radio tracklistings from BBC's website and output
 Licensed under GPL v3 (see COPYING).
 ***
 
-**This branch tries to add a lyrics tag containing the tracklisting to the relevant audio file that has been downloaded with `get_iplayer`. If it fails to find an appropriate audio file, it falls back to creating a text file.**
+**This branch tries to add a lyrics tag containing the tracklisting to the relevant audio file that has been downloaded with `get_iplayer`.**
 
 Uses code from [beets](https://github.com/sampsyo/beets) by Adrian Sampson.
 
 ### Usage examples
 Run `bbc_tracklist.py` from the command line. The required argument is the BBC programme id, the 8 characters that are found at the end of iPlayer URLs such as:`http://www.bbc.co.uk/iplayer/episode/<programme id>/<programme name>` or programme information URLs such as: `http://www.bbc.co.uk/programmes/<programme id>`. 
 
-Optional arguments are `<directory>` and `<filename>`. If either of these are omitted, output will be to the current path.
+Optional arguments are `<directory>` and `<filename prefix>`. If either of these are omitted, output will be to the current path.
 
-The output is a text file named `<pid>.txt` of the format:
+The script generates a string of the format:
 
 `Programme title`    
 `Programme broadcast date`    
@@ -21,6 +21,8 @@ The output is a text file named `<pid>.txt` of the format:
 `Title`  
 `Record label`  
 `***`
+
+This is used to try to tag an audio file in `<directory>` and with a filename **prefix** `<filename prefix>`, that is the name of the file without e.g. the .MP3 extension. First, it tries to tag an M4A file, then an MP3. If it fails to find (or write to) an appropriate audio file, it falls back to creating a text file.
 ***
 ### get_iplayer usage
 If downloading a radio programme with [get_iplayer](http://www.infradead.org/get_iplayer/html/get_iplayer.html), adding an argument of the form `--command "/home/get_iplayer/bbc_tracklist.py <pid> <dir> <fileprefix>"` should result in a text file containing the tracklisting in the same directory as your downloaded audio file. (Change `/home/get_iplayer` to point to wherever the script is located.)
