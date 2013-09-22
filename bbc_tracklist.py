@@ -143,13 +143,14 @@ def generate_output(listing, title, date):
     title: programme title
     date: programme date
     """
-    listing_string = title + '\n' + date + '\n\n'
+    listing_string = u''
+    listing_string += title + '\n' + date + '\n\n'
+
     for (artist, track, label) in listing:
-        # listing_string += (artist + ' - ' + track).encode('utf-8')
-        listing_string += (artist + '\n').encode('utf-8')
-        listing_string += (track + '\n').encode('utf-8')
-        listing_string += (label + '\n').encode('utf-8')
-        listing_string += '***\n'.encode('utf-8')
+        listing_string += (artist + '\n')
+        listing_string += (track + '\n')
+        listing_string += (label + '\n')
+        listing_string += '***\n'
     return listing_string
 
 
@@ -170,7 +171,7 @@ def get_output_filename():
 
 def write_listing_to_textfile(textfile, tracklisting):
     with open(textfile, 'wb+') as text:
-        text.write(tracklisting)
+        text.write(tracklisting.encode('utf-8'))
 
 
 def tag_audio_file(audio_file, tracklisting):
