@@ -182,7 +182,7 @@ def tag_audio_file(audio_file, tracklisting):
     try:
         f = mediafile.MediaFile(audio_file)
         # check if tracklisting already added
-        if f.lyrics.endswith(tracklisting):
+        if tracklisting in f.lyrics:
             print ("Tracklisting already present. Not modifying file.")
             return True
         # check if lyrics tag exists already
