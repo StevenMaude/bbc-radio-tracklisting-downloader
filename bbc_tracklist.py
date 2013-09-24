@@ -181,8 +181,18 @@ def tag_audio_file(audio_file, tracklisting):
     """
     try:
         f = mediafile.MediaFile(audio_file)
-        #tag = ''.join(lines)
-        f.lyrics = tracklisting
+        # check if tracklisting already added
+        if f.lyrics.endswith(tracklisting):
+            print ("Tracklisting already present. Not modifying file.")
+            return True
+        # check if lyrics tag exists already
+        elif len(f.lyrics) != 0:
+            print("Lyrics tag exists. Appending tracklisting to it.")
+            f.lyrics = f.lyrics + '\n\n' + 'Tracklisting' + '\n' + tracklisting
+        else:
+            print("No tracklisting present. Creating lyrics tag.")
+            f.lyrics = 'Tracklisting' + '\n' + tracklisting
+            #tag = ''.join(lines)
         f.save()
         print("Saved tag to file:", audio_file)
         return True
