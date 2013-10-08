@@ -4,7 +4,7 @@ Licensed under GPL v3 (see COPYING).
 ***
 
 **This branch tries to add a lyrics tag containing the tracklisting to the relevant audio file that has been downloaded with `get_iplayer`.**
-
+To be integrated into master.
 Uses code from [beets](https://github.com/sampsyo/beets) by Adrian Sampson.
 
 ### Usage examples
