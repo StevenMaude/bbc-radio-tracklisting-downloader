@@ -26,13 +26,16 @@ def parse_arguments(args=sys.argv[1:]):
     parser.add_argument('pid', help="BBC programme id, e.g. b03fnc82")
     parser.add_argument('--directory', help="output directory")
     parser.add_argument('--filename', help="output filename")
-    args = parser.parse_args()
-    print args.action
+    return parser.parse_args()
 
 
 def main():
-    """Placeholder function for now."""
-    parse_arguments()
+    """Check arguments are retrieved."""
+    args = parse_arguments()
+    print "action", args.action
+    print "pid", args.pid
+    print "directory", args.directory
+    print "filename", args.filename
 
 
 if __name__ == '__main__':
