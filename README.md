@@ -24,20 +24,22 @@ First, if `tag` or `both` actions are chosen, the script tries to tag an M4A fil
 
 The script generates an output formatted as:
 
-`Programme title`
-`Programme broadcast date`
-  
-`Artist`
-`Title`
-`Record label`
-`***`
+    Programme title
+    Programme broadcast date
+    
+    Artist
+    Title
+    Record label
+
+    ***
 
 ***
 ### get_iplayer usage
-If downloading a radio programme with [get_iplayer](http://www.infradead.org/get_iplayer/html/get_iplayer.html), adding an argument of the form `--command "/home/get_iplayer/bbc_tracklist.py action pid --directory DIRECTORY --fileprefix FILEPREFIX"` should result in a text file containing the tracklisting in the same directory as your downloaded audio file. (Change `/home/get_iplayer` to point to wherever the script is located.)
+If downloading a radio programme with [get_iplayer](http://www.infradead.org/get_iplayer/html/get_iplayer.html), adding an argument of the form `--command "/home/get_iplayer/bbc_tracklist.py action <pid> --directory <directory> --fileprefix <fileprefix>"` should result in a text file containing the tracklisting in the same directory as your downloaded audio file. (Change `/home/get_iplayer` to point to wherever the script is located.)
 ***
 ### Dependencies and issues
 * Requires [BeautfulSoup]((http://www.crummy.com/software/BeautifulSoup/) and [mutagen](http://code.google.com/p/mutagen/); `pip install -r requirements.txt` should install everything you need if you use pip.
 * Tested on Python 2.7.3 on Windows (Windows 7 64-bit) and Linux (Raspbian). (I suspect it doesn't work with Python versions earlier than this due to improvements in Python's HTMLParser introduced in 2.7.3.)
 * Tested with BeautifulSoup 4.1.3; later versions should be fine.
 * po:short_synopsis sections not handled yet.
+* Printing tracklisting in Windows doesn't play nicely with non-ASCII characters; these are ignored. (Printing occurs if directory and fileprefix are invalid.)
