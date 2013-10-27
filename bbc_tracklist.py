@@ -231,7 +231,9 @@ def write_text(filename, tracklisting):
         # if all else fails, just print listing
         print("Cannot write text file to path: {}".format(filename))
         print("Printing tracklisting here instead.")
-        print(tracklisting.encode(sys.stdout.encoding))
+        # ignoring errors is a hack to cope with Windows not dealing well
+        # with UTF-8
+        print(tracklisting.encode(sys.stdout.encoding, errors='ignore'))
 
 
 def tag_audio(filename, tracklisting):
