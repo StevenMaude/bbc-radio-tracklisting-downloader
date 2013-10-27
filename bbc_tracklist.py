@@ -159,13 +159,13 @@ def get_output_filename(args):
     Returns a filename without an extension.
     """
     # if filename and path provided, use these for output text file
-    if args.directory is not None and args.filename is not None:
+    if args.directory is not None and args.fileprefix is not None:
         path = args.directory
-        filename = args.filename
+        filename = args.fileprefix
         output = os.path.join(path, filename)
     # otherwise set output to current path
-    elif args.filename is not None:
-        output = args.filename
+    elif args.fileprefix is not None:
+        output = args.fileprefix
     else:
         output = args.pid
     return output
