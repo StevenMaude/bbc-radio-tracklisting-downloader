@@ -238,14 +238,14 @@ except IndexError:
     sys.exit()
 
 
-# open the page, extract the contents and output to text
-soup = open_listing_page(pid)
-listing, title, date = extract_listing(soup)
-filename = get_output_filename()
-tracklisting = generate_output(listing, title, date)
-output_to_file(filename, tracklisting)
+def main():
+    # open the page, extract the contents and output to text
+    soup = open_listing_page(pid)
+    listing, title, date = extract_listing(soup)
+    filename = get_output_filename()
+    tracklisting = generate_output(listing, title, date)
+    output_to_file(filename, tracklisting)
+    print("Done!")
 
-print("Done!")
-
-#if __name__ == '__main__':
-#    main()
+if __name__ == '__main__':
+    main()
