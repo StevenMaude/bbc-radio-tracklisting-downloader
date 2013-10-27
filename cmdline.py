@@ -29,7 +29,7 @@ def parse_arguments(args=sys.argv[1:]):
                         default='text', help=action_help)
     parser.add_argument('pid', help="BBC programme id, e.g. b03fnc82")
     parser.add_argument('--directory', help="output directory")
-    parser.add_argument('--filename', help="output filename prefix")
+    parser.add_argument('--fileprefix', help="output filename prefix")
     return parser.parse_args()
 
 
@@ -40,7 +40,7 @@ def main():
     print "action", args.action
     print "pid", args.pid
     print "directory", args.directory
-    print "filename", args.filename
+    print "fileprefix", args.fileprefix
 
 
 if __name__ == '__main__':
