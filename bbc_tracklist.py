@@ -184,6 +184,7 @@ def tag_audio_file(audio_file, tracklisting):
     """
     try:
         f = mediafile.MediaFile(audio_file)
+        print("Trying to tag {}".format(audio_file))
         # check if tracklisting already added
         if tracklisting in f.lyrics:
             print ("Tracklisting already present. Not modifying file.")
