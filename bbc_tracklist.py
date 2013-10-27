@@ -27,6 +27,7 @@ import sys
 
 import mediafile
 from bs4 import BeautifulSoup
+from cmdline import parse_arguments
 
 def open_listing_page(pid):
     """
@@ -153,23 +154,26 @@ def generate_output(listing, title, date):
     return listing_string
 
 
-def get_output_filename():
+def get_output_filename(args):
     """
     Returns a filename without an extension.
     """
     # if filename and path provided, use these for output text file
-    if len(sys.argv) == 4:
-        path = sys.argv[2]
-        filename = sys.argv[3]
+    if args.directory is not None and args.filename is not None:
+        path = args.directory
+        filename = args.filename
         output = os.path.join(path, filename)
     # otherwise set output to current path
+    elif args.filename is not None:
+        output = args.filename
     else:
-        output = pid
+        output = args.pid
     return output
 
 
 def write_listing_to_textfile(textfile, tracklisting):
-    with open(textfile, 'wb+') as text:
+    """Write tracklisting to a text file."""
+    with open(textfile, 'wb') as text:
         text.write(tracklisting.encode('utf-8'))
 
 
@@ -200,50 +204,55 @@ def tag_audio_file(audio_file, tracklisting):
         return False
 
 
-def output_to_file(filename, tracklisting):
+def output_to_file(filename, tracklisting, action):
     """
-    Try tagging to audio file. Failing that fall back to writing to text
-    file.
+    Produce requested output; either output text file, tag audio file or do
+    both.
 
     filename: a string of path + filename without file extension
     tracklisting: a string containing a tracklisting
+    action: 'tag', 'text' or 'both', from command line arguments
     """
-    # if writing to either type of file fails
-    # try writing to text file instead
+    if action in ('tag', 'both'):
+        tag_audio(filename, tracklisting)
+        if action == 'both':
+            write_text(filename, tracklisting)
+    elif action == 'text':
+        write_text(filename, tracklisting)
+
+
+def write_text(filename, tracklisting):
+    """Handle writing tracklisting to text."""
+    print("Saving text file.")
+    try:
+        write_listing_to_textfile(filename + '.txt', tracklisting)
+    except IOError:
+        # if all else fails, just print listing
+        print("Cannot write text file to path: {}".format(filename))
+        print("Printing tracklisting here instead.")
+        print(tracklisting.encode(sys.stdout.encoding))
+
+
+def tag_audio(filename, tracklisting):
+    """Handle tagging audio."""
     if not(tag_audio_file(filename + '.m4a', tracklisting) or
            tag_audio_file(filename + '.mp3', tracklisting)):
-        print("Cannot find or access any relevant audio file.")
-        try:
-            print("Trying to save a text file instead.")
-            write_listing_to_textfile(filename + '.txt', tracklisting)
-        except IOError:
-            # if all else fails, just print listing
-            print("Cannot write text file in specified path!")
-            print("Just printing tracklisting here instead.")
-            print(tracklisting)
-
-
-# programme id get from command line argument
-try:
-    pid = sys.argv[1]
-except IndexError:
-    print("bbc_tracklist.py: Download tracklistings for Radio 1, 6 Music and "
-          "maybe other BBC stations..." + '\n')
-    print("Usage: bbc_tracklist.py BBC_pid [directory] [filename prefix].")
-    print("Only BBC_pid is required, but to specify a file, both "
-          "[directory] and [filename prefix] are required.")
-    print("If either [directory] or [filename prefix] are omitted, output "
-          "will be to the current path.")
-    sys.exit()
-
+        print("Cannot find or access any relevant M4A or MP3 audio file.")
+        print("Trying to save a text file instead.")
+        write_text(filename, tracklisting)
+       
 
 def main():
+    """Get a tracklisting, write to audio file or text."""
+    # programme id get from command line argument
+    args = parse_arguments()
+    pid = args.pid
     # open the page, extract the contents and output to text
     soup = open_listing_page(pid)
     listing, title, date = extract_listing(soup)
-    filename = get_output_filename()
+    filename = get_output_filename(args)
     tracklisting = generate_output(listing, title, date)
-    output_to_file(filename, tracklisting)
+    output_to_file(filename, tracklisting, args.action)
     print("Done!")
 
 if __name__ == '__main__':
