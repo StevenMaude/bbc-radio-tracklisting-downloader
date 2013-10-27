@@ -215,8 +215,8 @@ def output_to_file(filename, tracklisting, action):
     action: 'tag', 'text' or 'both', from command line arguments
     """
     if action in ('tag', 'both'):
-        tag_audio(filename, tracklisting)
-        if action == 'both':
+        audio_tagged = tag_audio(filename, tracklisting)
+        if action == 'both' and audio_tagged:
             write_text(filename, tracklisting)
     elif action == 'text':
         write_text(filename, tracklisting)
@@ -237,12 +237,14 @@ def write_text(filename, tracklisting):
 
 
 def tag_audio(filename, tracklisting):
-    """Handle tagging audio."""
+    """Return True if audio tagged successfully; handle tagging audio."""
     if not(tag_audio_file(filename + '.m4a', tracklisting) or
            tag_audio_file(filename + '.mp3', tracklisting)):
         print("Cannot find or access any relevant M4A or MP3 audio file.")
         print("Trying to save a text file instead.")
         write_text(filename, tracklisting)
+        return False
+    return True
        
 
 def main():
