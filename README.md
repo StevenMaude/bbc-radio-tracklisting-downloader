@@ -39,7 +39,7 @@ If downloading a radio programme with [get_iplayer](http://www.infradead.org/get
 ***
 ### Dependencies and issues
 * Requires [BeautfulSoup]((http://www.crummy.com/software/BeautifulSoup/) and [mutagen](http://code.google.com/p/mutagen/); `pip install -r requirements.txt` should install everything you need if you use pip.
-* Tested on Python 2.7.3 on Windows (Windows 7 64-bit) and Linux (Raspbian). (I suspect it doesn't work with Python versions earlier than this due to improvements in Python's HTMLParser introduced in 2.7.3.)
+* Tested on Python 2.7.3 on Windows (Windows 7 64-bit) and Linux (Raspbian and Ubuntu 12.04). (I suspect it doesn't work with Python versions earlier than this due to improvements in Python's HTMLParser introduced in 2.7.3.)
 * Tested with BeautifulSoup 4.1.3; later versions should be fine.
 * po:short_synopsis sections not handled yet.
 * Printing tracklisting in Windows doesn't play nicely with non-ASCII characters; these are ignored. (Printing occurs if directory and fileprefix are invalid.)
