@@ -21,13 +21,12 @@
 ## maybe iterate over directory and subdirectories and try to download all
 ## tracklistings for mp3s?
 from __future__ import print_function
-from bs4 import BeautifulSoup
 import os
 import urllib
 import sys
-#import time
-import mediafile
 
+import mediafile
+from bs4 import BeautifulSoup
 
 def open_listing_page(pid):
     """
