@@ -21,13 +21,14 @@
 ## maybe iterate over directory and subdirectories and try to download all
 ## tracklistings for mp3s?
 from __future__ import print_function
-from bs4 import BeautifulSoup
 import os
 import urllib
 import sys
-import time
 
-##def main():
+import mediafile
+from bs4 import BeautifulSoup
+from cmdline import parse_arguments
+
 def open_listing_page(pid):
     """
     Opens a BBC radio tracklisting page based on pid. Returns a BeautifulSoup
@@ -50,6 +51,7 @@ def open_listing_page(pid):
     html.close()
     return soup
 
+
 def extract_listing(soup):
     """
     Returns listing, a list of (artist, track, record label) tuples,
@@ -60,8 +62,8 @@ def extract_listing(soup):
     print("Extracting data...")
     try:
         # get radio station as string
-        station = soup.find('a', class_='logo-area masterbrand-logo'\
-                    ).find(class_='title').get_text()
+        station = soup.find('a', class_='logo-area masterbrand-logo'
+                            ).find(class_='title').get_text()
 
         # get programme title
         title = (soup.title.get_text()).strip()
@@ -101,17 +103,17 @@ def extract_listing(soup):
         track = each.find(class_="title")
         label = each.find(class_="record-label")
 
-        if artist != None:
+        if artist is not None:
             art = artist.get_text()
         else:
             art = ''
 
-        if track != None:
+        if track is not None:
             trk = track.get_text()
         else:
             art = ''
 
-        if label != None:
+        if label is not None:
             lbl = label.get_text()
         else:
             lbl = ''
@@ -132,81 +134,131 @@ def extract_listing(soup):
         #    print('***')
     return listing, title, date
 
-# also need to handle writing output to file
-def write_tracklisting_to_text(listing, pid, title, date, output):
-    """
-    Write tracklisting to a text file.
 
-    listing: list of (artist, track, record label) tuples
-    pid: programme id
-    title: programme title
-    date: date of programme broadcast
-    output: output filename
+def generate_output(listing, title, date):
     """
-    # handle this invalid filename
-    try:
-        with open(output, 'w') as textfile:
-            write_output(textfile, listing, title, date)
-    except IOError:
-        print("Cannot write output. Check write permissions.")
-        sys.exit()
+    Returns a string containing a full tracklisting.
 
-def write_output(textfile, listing, title, date):
-    """
-    Writes artist, track, label to text file.
-
-    textfile: file object
     listing: list of (artist, track, record label) tuples
     title: programme title
     date: programme date
     """
-    textfile.write(title + '\n')
-    textfile.write(date + '\n\n')
-    written_first_entry = False
-    for (artist, track, label) in listing:
-        # encode handles unicode characters
-        line = (artist + ' - ' + track).encode('utf-8')
-        textfile.write((artist + '\n').encode('utf-8'))
-        textfile.write((track + '\n').encode('utf-8'))
-        textfile.write((label + '\n').encode('utf-8'))
-        textfile.write('***'.encode('utf-8'))
-        textfile.write('\n'.encode('utf-8'))
+    listing_string = u''
+    listing_string += title + '\n' + date + '\n\n'
 
-def get_output_path():
+    for (artist, track, label) in listing:
+        listing_string += (artist + '\n')
+        listing_string += (track + '\n')
+        listing_string += (label + '\n')
+        listing_string += '***\n'
+    return listing_string
+
+
+def get_output_filename(args):
     """
-    Returns a file path
+    Returns a filename without an extension.
     """
     # if filename and path provided, use these for output text file
-    if len(sys.argv) == 4:
-        path = sys.argv[2]
-        filename = sys.argv[3] + '.txt'
+    if args.directory is not None and args.fileprefix is not None:
+        path = args.directory
+        filename = args.fileprefix
         output = os.path.join(path, filename)
     # otherwise set output to current path
+    elif args.fileprefix is not None:
+        output = args.fileprefix
     else:
-        output = pid + '.txt'
+        output = args.pid
     return output
 
-# programme id get from command line argument
-try:
-    pid = sys.argv[1]
-except IndexError:
-    print("bbc_tracklist.py: Download tracklistings for Radio 1, 6 Music and "
-            "maybe other BBC stations..." + '\n')
-    print("Usage: tlist.py BBC_pid [directory] [filename].")
-    print("Only BBC_pid is required, but to specify a path, both "
-            "[directory] and [filename] are required.")
-    print("If either [directory] or [filename] are omitted, output "
-            "will be to the current path.")
-    sys.exit()
 
-# open the page, extract the contents and output to text
-soup = open_listing_page(pid)
-listing, title, date = extract_listing(soup)
-output = get_output_path()
-#print (output)
-write_tracklisting_to_text(listing, pid, title, date, output)
+def write_listing_to_textfile(textfile, tracklisting):
+    """Write tracklisting to a text file."""
+    with open(textfile, 'wb') as text:
+        text.write(tracklisting.encode('utf-8'))
 
-print("Done!")
 
-#if __name__ == '__main__':
-#    main()
+def tag_audio_file(audio_file, tracklisting):
+    """
+    Adds tracklisting as list to lyrics tag of audio file.
+    Returns True if successful, False if not.
+    """
+    try:
+        f = mediafile.MediaFile(audio_file)
+        print("Trying to tag {}".format(audio_file))
+        # check if tracklisting already added
+        if tracklisting in f.lyrics:
+            print ("Tracklisting already present. Not modifying file.")
+            return True
+        # check if lyrics tag exists already
+        elif len(f.lyrics) != 0:
+            print("Lyrics tag exists. Appending tracklisting to it.")
+            f.lyrics = f.lyrics + '\n\n' + 'Tracklisting' + '\n' + tracklisting
+        else:
+            print("No tracklisting present. Creating lyrics tag.")
+            f.lyrics = 'Tracklisting' + '\n' + tracklisting
+            #tag = ''.join(lines)
+        f.save()
+        print("Saved tag to file:", audio_file)
+        return True
+    except IOError:
+        print("Unable to save tag to file:", audio_file)
+        return False
+
+
+def output_to_file(filename, tracklisting, action):
+    """
+    Produce requested output; either output text file, tag audio file or do
+    both.
+
+    filename: a string of path + filename without file extension
+    tracklisting: a string containing a tracklisting
+    action: 'tag', 'text' or 'both', from command line arguments
+    """
+    if action in ('tag', 'both'):
+        audio_tagged = tag_audio(filename, tracklisting)
+        if action == 'both' and audio_tagged:
+            write_text(filename, tracklisting)
+    elif action == 'text':
+        write_text(filename, tracklisting)
+
+
+def write_text(filename, tracklisting):
+    """Handle writing tracklisting to text."""
+    print("Saving text file.")
+    try:
+        write_listing_to_textfile(filename + '.txt', tracklisting)
+    except IOError:
+        # if all else fails, just print listing
+        print("Cannot write text file to path: {}".format(filename))
+        print("Printing tracklisting here instead.")
+        # ignoring errors is a hack to cope with Windows not dealing well
+        # with UTF-8
+        print(tracklisting.encode(sys.stdout.encoding, errors='ignore'))
+
+
+def tag_audio(filename, tracklisting):
+    """Return True if audio tagged successfully; handle tagging audio."""
+    if not(tag_audio_file(filename + '.m4a', tracklisting) or
+           tag_audio_file(filename + '.mp3', tracklisting)):
+        print("Cannot find or access any relevant M4A or MP3 audio file.")
+        print("Trying to save a text file instead.")
+        write_text(filename, tracklisting)
+        return False
+    return True
+       
+
+def main():
+    """Get a tracklisting, write to audio file or text."""
+    # programme id get from command line argument
+    args = parse_arguments()
+    pid = args.pid
+    # open the page, extract the contents and output to text
+    soup = open_listing_page(pid)
+    listing, title, date = extract_listing(soup)
+    filename = get_output_filename(args)
+    tracklisting = generate_output(listing, title, date)
+    output_to_file(filename, tracklisting, args.action)
+    print("Done!")
+
+if __name__ == '__main__':
+    main()
