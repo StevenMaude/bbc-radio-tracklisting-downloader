@@ -36,7 +36,7 @@ The script generates an output formatted as:
 If downloading a radio programme with [get_iplayer](http://www.infradead.org/get_iplayer/html/get_iplayer.html), adding an argument of the form `--command "python /home/scripts/bbc_tracklist.py action <pid> --directory <dir> --fileprefix <fileprefix>"` should result in a text file containing the tracklisting in the same directory as your downloaded audio file. (Change `/home/scripts` to point to wherever the script is located.)
 
 In Windows, you may need to quote the placeholders (presumably if there are spaces in them; thanks [JackDandy](https://github.com/JackDandy)) 
-bbc_tracklist.py <pid> "<dir>" "<fileprefix>"
+`bbc_tracklist.py <pid> "<dir>" "<fileprefix>"`
 ***
 ### Dependencies and issues
 * Requires [BeautfulSoup]((http://www.crummy.com/software/BeautifulSoup/) and [mutagen](http://code.google.com/p/mutagen/); `pip install -r requirements.txt` should install everything you need if you use pip.
