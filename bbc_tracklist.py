@@ -22,6 +22,8 @@
 ## maybe iterate over directory and subdirectories and try to download all
 ## tracklistings for mp3s?
 from __future__ import print_function
+
+import codecs
 import os
 import sys
 
@@ -138,8 +140,8 @@ def get_output_filename(args):
 
 def write_listing_to_textfile(textfile, tracklisting):
     """Write tracklisting to a text file."""
-    with open(textfile, 'wb') as text:
-        text.write(tracklisting.encode('utf-8'))
+    with codecs.open(textfile, 'wb', 'utf-8') as text:
+        text.write(tracklisting)
 
 
 def tag_audio_file(audio_file, tracklisting):
