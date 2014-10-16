@@ -52,87 +52,52 @@ def open_listing_page(trailing_part_of_url):
     return lxml.html.fromstring(html)
 
 
-def extract_listing(soup):
-    """
-    Returns listing, a list of (artist, track, record label) tuples,
-    programme title (string) and programme date (string).
-
-    soup: BeautifulSoup object.
-    """
-    print("Extracting data...")
+def get_programme_title(pid):
+    """Take BBC programme ID as string; returns programme title as string."""
+    print("Extracting title and station...")
+    main_page_etree = open_listing_page(pid)
     try:
-        # get radio station as string
-        station = soup.find('a', class_='logo-area masterbrand-logo'
-                            ).find(class_='title').get_text()
+        title, = main_page_etree.xpath('//title/text()')
+    except ValueError:
+        title = ''
+    return title.strip()
 
-        # get programme title
-        title = (soup.title.get_text()).strip()
 
-        # get programme date
-        date = soup.find(datatype="xsd:date").get_text()
+def get_broadcast_date(pid):
+    """Take BBC pid (string); extract and return broadcast date as string."""
+    print("Extracting first broadcast date...")
+    broadcast_etree = open_listing_page(pid + '/broadcasts.inc')
+    original_broadcast_date, = broadcast_etree.xpath(
+        '(//div[@class="grid__inner"]//span'
+        '[@class="broadcast-event__date text-base timezone--date"])'
+        '[1]/text()')
+    return original_broadcast_date
 
-        # figure out how to convert this object into a datetime one
-        #time.strptime(date, "%a %d %b %Y")
 
-        ##print(title)
-        ##print(date)
-        ##print('***')
-        # po:short_synopsis?
-        # handle po:SpeechSegment?
-        # e.g. b01pzszx
-        # don't know how to get the titles as well
-        # could do
-        # hit = soup.findAll(['li', 'h3'])
-        # but duplicates artists, tracks and labels then...
-        # hit = soup.findAll('li')
-        hits = soup.findAll(typeof=['po:MusicSegment', 'po:SpeechSegment'])
+def extract_listing(pid):
+    """Extract listing; return list of tuples (artist, title, label)."""
+    print("Extracting tracklisting...")
+    listing_etree = open_listing_page(pid + '/segments.inc')
+    track_divs = listing_etree.xpath('//div[@class="segment__track"]')
 
-    except AttributeError:
-        print("Error processing web page.")
-        print("Bad programme id?")
-        sys.exit()
-
-    # store (artist, track, record label) in listing as list of tuples
     listing = []
-
-    for each in hits:
-        #artist = None
-        #track = None
-        #label = None
-        artist = each.find(class_="artist")
-        track = each.find(class_="title")
-        label = each.find(class_="record-label")
-
-        if artist is not None:
-            art = artist.get_text()
-        else:
-            art = ''
-
-        if track is not None:
-            trk = track.get_text()
-        else:
-            art = ''
-
-        if label is not None:
-            lbl = label.get_text()
-        else:
-            lbl = ''
-
-        listing.append((art, trk, lbl))
-        #print(each)
-        # group_title = each.find('h3')
-        #if group_title != None:
-        #    print(group_title.get_text())
-        #    print(group_title)
-        #if artist != None:
-        #    print(artist.get_text())
-        #if track != None:
-        #    print(track.get_text())
-        #if label != None:
-        #    print(label.get_text())
-        #if artist != None or track != None or label != None:
-        #    print('***')
-    return listing, title, date
+    for track_div in track_divs:
+        try:
+            artist, = track_div.xpath('.//span[@property="byArtist"]'
+                                      '//span[@class="artist"]/text()')
+        except ValueError:
+            artist = ''
+        try:
+            title, = track_div.xpath('.//p[@property="name"]/text()')
+        except ValueError:
+            title = ''
+        try:
+            label, = track_div.xpath('.//abbr[@title="Record Label"]'
+                                     '/span[@property="name"]/text()')
+        except ValueError:
+            label = ''
+        listing.append((artist, title, label))
+    return listing
 
 
 def generate_output(listing, title, date):
@@ -253,10 +218,11 @@ def main():
     args = parse_arguments()
     pid = args.pid
     # open the page, extract the contents and output to text
-    soup = open_listing_page(pid)
-    listing, title, date = extract_listing(soup)
+    title = get_programme_title(pid)
+    broadcast_date = get_broadcast_date(pid)
+    listing = extract_listing(pid)
     filename = get_output_filename(args)
-    tracklisting = generate_output(listing, title, date)
+    tracklisting = generate_output(listing, title, broadcast_date)
     output_to_file(filename, tracklisting, args.action)
     print("Done!")
 
