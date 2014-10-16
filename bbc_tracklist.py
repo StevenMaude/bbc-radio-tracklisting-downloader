@@ -23,34 +23,33 @@
 ## tracklistings for mp3s?
 from __future__ import print_function
 import os
-import urllib
 import sys
 
+import lxml.html
 import mediafile
-from bs4 import BeautifulSoup
+import requests
+
 from cmdline import parse_arguments
 
-def open_listing_page(pid):
-    """
-    Opens a BBC radio tracklisting page based on pid. Returns a BeautifulSoup
-    object derived from that page.
 
-    pid: programme id
+def open_listing_page(trailing_part_of_url):
+    """
+    Opens a BBC radio tracklisting page based on trailing part of url.
+    Returns a lxml ElementTree derived from that page.
+
+    trailing_part_of_url: a string, like the pid or e.g. pid/segments.inc
     """
     base_URL = 'http://www.bbc.co.uk/programmes/'
-    print("Opening web page: " + base_URL + pid)
-    ## change to with statement here?
-    # get html
+    print("Opening web page: " + base_URL + trailing_part_of_url)
+
     try:
-        html = urllib.urlopen(base_URL + pid)
-        soup = BeautifulSoup(html.read())
-    except (IOError, NameError) as e:
+        html = requests.get(base_URL + trailing_part_of_url).text
+    except (IOError, NameError):
         print("Error opening web page.")
         print("Check network connection and/or programme id.")
         sys.exit()
 
-    html.close()
-    return soup
+    return lxml.html.fromstring(html)
 
 
 def extract_listing(soup):
