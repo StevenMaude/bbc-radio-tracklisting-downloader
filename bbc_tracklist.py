@@ -110,14 +110,9 @@ def generate_output(listing, title, date):
     title: programme title
     date: programme date
     """
-    listing_string = u''
-    listing_string += title + '\n' + date + '\n\n'
-
-    for (artist, track, label) in listing:
-        listing_string += (artist + '\n')
-        listing_string += (track + '\n')
-        listing_string += (label + '\n')
-        listing_string += '***\n'
+    listing_string = u'{0}\n{1}\n\n'.format(title, date)
+    for entry in listing:
+        listing_string += '\n'.join(entry) + '\n***\n'
     return listing_string
 
 
