@@ -212,14 +212,12 @@ def tag_audio(filename, tracklisting):
         write_text(filename, tracklisting)
         return False
     return True
-       
+
 
 def main():
     """Get a tracklisting, write to audio file or text."""
-    # programme id get from command line argument
     args = parse_arguments()
     pid = args.pid
-    # open the page, extract the contents and output to text
     title = get_programme_title(pid)
     broadcast_date = get_broadcast_date(pid)
     listing = extract_listing(pid)
