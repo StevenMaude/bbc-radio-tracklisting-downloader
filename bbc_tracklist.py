@@ -117,15 +117,13 @@ def generate_output(listing, title, date):
 
 
 def get_output_filename(args):
-    """
-    Returns a filename without an extension.
-    """
-    # if filename and path provided, use these for output text file
+    """Returns a filename as string without an extension."""
+    # If filename and path provided, use these for output text file.
     if args.directory is not None and args.fileprefix is not None:
         path = args.directory
         filename = args.fileprefix
         output = os.path.join(path, filename)
-    # otherwise set output to current path
+    # Otherwise, set output to current path
     elif args.fileprefix is not None:
         output = args.fileprefix
     else:
