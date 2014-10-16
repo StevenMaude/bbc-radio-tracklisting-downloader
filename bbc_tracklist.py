@@ -47,7 +47,7 @@ def open_listing_page(trailing_part_of_url):
     except (IOError, NameError):
         print("Error opening web page.")
         print("Check network connection and/or programme id.")
-        sys.exit()
+        sys.exit(1)
 
     return lxml.html.fromstring(html)
 
