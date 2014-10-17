@@ -74,7 +74,7 @@ If you're on Windows and have `pip` installed, `pip install mutagen requests`
 should work.
 
 `lxml` requires compiling, so the easiest way is to install it is by
-downloading a compiled version from [Christophe Gohlke's site](http://www.lfd.uci.edu/~gohlke/pythonlibs).
+downloading a compiled version from [Christoph Gohlke's site](http://www.lfd.uci.edu/~gohlke/pythonlibs).
 
 Even on Linux, compiling `lxml` may require more build dependencies.
 See [this discussion](https://stackoverflow.com/questions/6504810) for
