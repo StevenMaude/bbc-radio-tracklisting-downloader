@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# encoding: utf-8
 
 # bbc_radio_tracklisting_downloader: Download radio tracklistings from
 # BBC's website and outputs to a text file.
@@ -21,149 +22,115 @@
 ## maybe iterate over directory and subdirectories and try to download all
 ## tracklistings for mp3s?
 from __future__ import print_function
+from __future__ import unicode_literals
+
+import codecs
 import os
-import urllib
 import sys
 
+import lxml.html
 import mediafile
-from bs4 import BeautifulSoup
+import requests
+
 from cmdline import parse_arguments
 
-def open_listing_page(pid):
-    """
-    Opens a BBC radio tracklisting page based on pid. Returns a BeautifulSoup
-    object derived from that page.
 
-    pid: programme id
+def open_listing_page(trailing_part_of_url):
     """
-    base_URL = 'http://www.bbc.co.uk/programmes/'
-    print("Opening web page: " + base_URL + pid)
-    ## change to with statement here?
-    # get html
+    Opens a BBC radio tracklisting page based on trailing part of url.
+    Returns a lxml ElementTree derived from that page.
+
+    trailing_part_of_url: a string, like the pid or e.g. pid/segments.inc
+    """
+    base_url = 'http://www.bbc.co.uk/programmes/'
+    print("Opening web page: " + base_url + trailing_part_of_url)
+
     try:
-        html = urllib.urlopen(base_URL + pid)
-        soup = BeautifulSoup(html.read())
-    except (IOError, NameError) as e:
+        html = requests.get(base_url + trailing_part_of_url).text
+    except (IOError, NameError):
         print("Error opening web page.")
         print("Check network connection and/or programme id.")
-        sys.exit()
+        sys.exit(1)
 
-    html.close()
-    return soup
+    return lxml.html.fromstring(html)
 
 
-def extract_listing(soup):
-    """
-    Returns listing, a list of (artist, track, record label) tuples,
-    programme title (string) and programme date (string).
-
-    soup: BeautifulSoup object.
-    """
-    print("Extracting data...")
+def get_programme_title(pid):
+    """Take BBC programme ID as string; returns programme title as string."""
+    print("Extracting title and station...")
+    main_page_etree = open_listing_page(pid)
     try:
-        # get radio station as string
-        station = soup.find('a', class_='logo-area masterbrand-logo'
-                            ).find(class_='title').get_text()
+        title, = main_page_etree.xpath('//title/text()')
+    except ValueError:
+        title = ''
+    return title.strip()
 
-        # get programme title
-        title = (soup.title.get_text()).strip()
 
-        # get programme date
-        date = soup.find(datatype="xsd:date").get_text()
+def get_broadcast_date(pid):
+    """Take BBC pid (string); extract and return broadcast date as string."""
+    print("Extracting first broadcast date...")
+    broadcast_etree = open_listing_page(pid + '/broadcasts.inc')
+    original_broadcast_date, = broadcast_etree.xpath(
+        '(//div[@class="grid__inner"]//div'
+        '[@class="broadcast-event__time beta"]/@title)[1]')
+    return original_broadcast_date
 
-        # figure out how to convert this object into a datetime one
-        #time.strptime(date, "%a %d %b %Y")
 
-        ##print(title)
-        ##print(date)
-        ##print('***')
-        # po:short_synopsis?
-        # handle po:SpeechSegment?
-        # e.g. b01pzszx
-        # don't know how to get the titles as well
-        # could do
-        # hit = soup.findAll(['li', 'h3'])
-        # but duplicates artists, tracks and labels then...
-        # hit = soup.findAll('li')
-        hits = soup.findAll(typeof=['po:MusicSegment', 'po:SpeechSegment'])
+def extract_listing(pid):
+    """Extract listing; return list of tuples (artist(s), title, label)."""
+    print("Extracting tracklisting...")
+    listing_etree = open_listing_page(pid + '/segments.inc')
+    track_divs = listing_etree.xpath('//div[@class="segment__track"]')
 
-    except AttributeError:
-        print("Error processing web page.")
-        print("Bad programme id?")
-        sys.exit()
-
-    # store (artist, track, record label) in listing as list of tuples
     listing = []
+    for track_div in track_divs:
+        try:
+            artist_names = track_div.xpath('.//span[@property="byArtist"]'
+                                           '//span[@class="artist"]/text()')
+        except ValueError:
+            artist_names = ['']
 
-    for each in hits:
-        #artist = None
-        #track = None
-        #label = None
-        artist = each.find(class_="artist")
-        track = each.find(class_="title")
-        label = each.find(class_="record-label")
-
-        if artist is not None:
-            art = artist.get_text()
+        if len(artist_names) > 1:
+            artists = ', '.join(artist_names[:-1]) + ' & ' + artist_names[-1]
         else:
-            art = ''
+            artists = artist_names[0]
 
-        if track is not None:
-            trk = track.get_text()
-        else:
-            art = ''
+        try:
+            title, = track_div.xpath('.//p[@property="name"]/text()')
+        except ValueError:
+            title = ''
 
-        if label is not None:
-            lbl = label.get_text()
-        else:
-            lbl = ''
-
-        listing.append((art, trk, lbl))
-        #print(each)
-        # group_title = each.find('h3')
-        #if group_title != None:
-        #    print(group_title.get_text())
-        #    print(group_title)
-        #if artist != None:
-        #    print(artist.get_text())
-        #if track != None:
-        #    print(track.get_text())
-        #if label != None:
-        #    print(label.get_text())
-        #if artist != None or track != None or label != None:
-        #    print('***')
-    return listing, title, date
+        try:
+            label, = track_div.xpath('.//abbr[@title="Record Label"]'
+                                     '/span[@property="name"]/text()')
+        except ValueError:
+            label = ''
+        listing.append((artists, title, label))
+    return listing
 
 
 def generate_output(listing, title, date):
     """
     Returns a string containing a full tracklisting.
 
-    listing: list of (artist, track, record label) tuples
+    listing: list of (artist(s), track, record label) tuples
     title: programme title
     date: programme date
     """
-    listing_string = u''
-    listing_string += title + '\n' + date + '\n\n'
-
-    for (artist, track, label) in listing:
-        listing_string += (artist + '\n')
-        listing_string += (track + '\n')
-        listing_string += (label + '\n')
-        listing_string += '***\n'
+    listing_string = '{0}\n{1}\n\n'.format(title, date)
+    for entry in listing:
+        listing_string += '\n'.join(entry) + '\n***\n'
     return listing_string
 
 
 def get_output_filename(args):
-    """
-    Returns a filename without an extension.
-    """
-    # if filename and path provided, use these for output text file
+    """Returns a filename as string without an extension."""
+    # If filename and path provided, use these for output text file.
     if args.directory is not None and args.fileprefix is not None:
         path = args.directory
         filename = args.fileprefix
         output = os.path.join(path, filename)
-    # otherwise set output to current path
+    # Otherwise, set output to current path
     elif args.fileprefix is not None:
         output = args.fileprefix
     else:
@@ -173,8 +140,8 @@ def get_output_filename(args):
 
 def write_listing_to_textfile(textfile, tracklisting):
     """Write tracklisting to a text file."""
-    with open(textfile, 'wb') as text:
-        text.write(tracklisting.encode('utf-8'))
+    with codecs.open(textfile, 'wb', 'utf-8') as text:
+        text.write(tracklisting)
 
 
 def tag_audio_file(audio_file, tracklisting):
@@ -245,18 +212,17 @@ def tag_audio(filename, tracklisting):
         write_text(filename, tracklisting)
         return False
     return True
-       
+
 
 def main():
     """Get a tracklisting, write to audio file or text."""
-    # programme id get from command line argument
     args = parse_arguments()
     pid = args.pid
-    # open the page, extract the contents and output to text
-    soup = open_listing_page(pid)
-    listing, title, date = extract_listing(soup)
+    title = get_programme_title(pid)
+    broadcast_date = get_broadcast_date(pid)
+    listing = extract_listing(pid)
     filename = get_output_filename(args)
-    tracklisting = generate_output(listing, title, date)
+    tracklisting = generate_output(listing, title, broadcast_date)
     output_to_file(filename, tracklisting, args.action)
     print("Done!")
 
