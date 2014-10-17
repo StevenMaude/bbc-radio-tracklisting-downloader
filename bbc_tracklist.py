@@ -77,7 +77,7 @@ def get_broadcast_date(pid):
 
 
 def extract_listing(pid):
-    """Extract listing; return list of tuples (artist, title, label)."""
+    """Extract listing; return list of tuples (artist(s), title, label)."""
     print("Extracting tracklisting...")
     listing_etree = open_listing_page(pid + '/segments.inc')
     track_divs = listing_etree.xpath('//div[@class="segment__track"]')
@@ -113,7 +113,7 @@ def generate_output(listing, title, date):
     """
     Returns a string containing a full tracklisting.
 
-    listing: list of (artist, track, record label) tuples
+    listing: list of (artist(s), track, record label) tuples
     title: programme title
     date: programme date
     """
