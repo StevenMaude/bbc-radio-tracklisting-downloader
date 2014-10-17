@@ -84,20 +84,27 @@ def extract_listing(pid):
     listing = []
     for track_div in track_divs:
         try:
-            artist, = track_div.xpath('.//span[@property="byArtist"]'
-                                      '//span[@class="artist"]/text()')
+            artist_names = track_div.xpath('.//span[@property="byArtist"]'
+                                           '//span[@class="artist"]/text()')
         except ValueError:
-            artist = ''
+            artist_names = ['']
+
+        if len(artist_names) > 1:
+            artists = ', '.join(artist_names[:-1]) + ' & ' + artist_names[-1]
+        else:
+            artists = artist_names[0]
+
         try:
             title, = track_div.xpath('.//p[@property="name"]/text()')
         except ValueError:
             title = ''
+
         try:
             label, = track_div.xpath('.//abbr[@title="Record Label"]'
                                      '/span[@property="name"]/text()')
         except ValueError:
             label = ''
-        listing.append((artist, title, label))
+        listing.append((artists, title, label))
     return listing
 
 
