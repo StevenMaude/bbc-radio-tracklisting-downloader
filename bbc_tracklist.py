@@ -52,7 +52,12 @@ def open_listing_page(trailing_part_of_url):
         print("Check network connection and/or programme id.")
         sys.exit(1)
 
-    return lxml.html.fromstring(html)
+    try:
+        return lxml.html.fromstring(html)
+    except lxml.etree.ParserError:
+        print("Error trying to parse web page.")
+        print("Maybe there's no programme listing?")
+        sys.exit(1)
 
 
 def get_programme_title(pid):
