@@ -70,9 +70,8 @@ def get_broadcast_date(pid):
     print("Extracting first broadcast date...")
     broadcast_etree = open_listing_page(pid + '/broadcasts.inc')
     original_broadcast_date, = broadcast_etree.xpath(
-        '(//div[@class="grid__inner"]//span'
-        '[@class="broadcast-event__date text-base timezone--date"])'
-        '[1]/text()')
+        '(//div[@class="grid__inner"]//div'
+        '[@class="broadcast-event__time beta"]/@title)[1]')
     return original_broadcast_date
 
 
