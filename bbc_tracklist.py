@@ -22,6 +22,7 @@
 ## maybe iterate over directory and subdirectories and try to download all
 ## tracklistings for mp3s?
 from __future__ import print_function
+from __future__ import unicode_literals
 
 import codecs
 import os
@@ -116,7 +117,7 @@ def generate_output(listing, title, date):
     title: programme title
     date: programme date
     """
-    listing_string = u'{0}\n{1}\n\n'.format(title, date)
+    listing_string = '{0}\n{1}\n\n'.format(title, date)
     for entry in listing:
         listing_string += '\n'.join(entry) + '\n***\n'
     return listing_string
