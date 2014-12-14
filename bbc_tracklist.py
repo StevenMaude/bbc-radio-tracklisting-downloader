@@ -94,6 +94,9 @@ def extract_listing(pid):
                                            '//span[@class="artist"]/text()')
         except ValueError:
             artist_names = ['']
+            
+        if not artist_names:
+            artist_names = ['']
 
         if len(artist_names) > 1:
             artists = ', '.join(artist_names[:-1]) + ' & ' + artist_names[-1]
