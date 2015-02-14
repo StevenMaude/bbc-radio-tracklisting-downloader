@@ -64,7 +64,8 @@ are spaces in them; thanks [JackDandy](https://github.com/JackDandy))
   (Raspbian and Ubuntu 12.04). (I suspect it doesn't work with Python
   versions earlier than this due to improvements in Python's HTMLParser
   introduced in 2.7.3.)
-* Hopefully compatible with Python 3.4 (not tested).
+* Not compatible with Python 3.4 as yet. This code shouldn't be hard
+  to port, but beets is not yet Python 3 compatible.
 
 Install `beets`, `requests` and `lxml`.
 
