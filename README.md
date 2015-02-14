@@ -83,4 +83,5 @@ distribution's package manager (e.g. `python-lxml`).
 ### Known issue (don't think there's an easy fix)
 * Printing tracklisting in Windows doesn't play nicely with non-ASCII
 characters; these are ignored. (Printing occurs if directory and
-fileprefix are invalid.)
+fileprefix are invalid.) You can try running `cmd /u` in a command
+prompt if you find this an issue (not tested).
