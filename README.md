@@ -73,8 +73,8 @@ Install `beets`, `requests` and `lxml`.
 
 If you're on Windows and have `pip` installed, `pip install beets requests`
 should work. `lxml` requires compiling, so the easiest way is to install
-it is by downloading a compiled version from
-[Christoph Gohlke's site](http://www.lfd.uci.edu/~gohlke/pythonlibs).
+it is by downloading the latest installer version for Python 2.7 from
+[PyPI](https://pypi.python.org/pypi/lxml).
 
 Even on Linux, compiling `lxml` may require more build dependencies.
 See [this discussion](https://stackoverflow.com/questions/6504810) for
