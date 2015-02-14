@@ -66,9 +66,16 @@ are spaces in them; thanks [JackDandy](https://github.com/JackDandy))
   introduced in 2.7.3.)
 * Not compatible with Python 3.4 as yet. This code shouldn't be hard
   to port, but beets is not yet Python 3 compatible.
+* Requires `beets`, `requests` and `lxml`.
 
-Install `beets`, `requests` and `lxml`.
+## Install module directly
+`pip install git+https://github.com/StevenMaude/bbc_radio_tracklisting_downloader.git`
+should install the module and its dependencies. However, lxml may be an
+issue if you're on Windows (see below); make sure that's installed first.
 
+`bbc_tracklist` should be available as a command. (Tested on Linux only.)
+
+## Installing by hand
 `pip install -r requirements.txt` may work for you on Linux.
 
 If you're on Windows and have `pip` installed, `pip install beets requests`
@@ -80,6 +87,9 @@ Even on Linux, compiling `lxml` may require more build dependencies.
 See [this discussion](https://stackoverflow.com/questions/6504810) for
 details. Otherwise, there may be a version of `lxml` in your
 distribution's package manager (e.g. `python-lxml`).
+
+You can then grab a copy of the Python scripts from here or git clone
+the repository.
 
 ### Known issue (don't think there's an easy fix)
 * Printing tracklisting in Windows doesn't play nicely with non-ASCII
