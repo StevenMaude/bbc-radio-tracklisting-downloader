@@ -64,7 +64,8 @@ are spaces in them; thanks [JackDandy](https://github.com/JackDandy))
   (Raspbian and Ubuntu 12.04). (I suspect it doesn't work with Python
   versions earlier than this due to improvements in Python's HTMLParser
   introduced in 2.7.3.)
-* Hopefully compatible with Python 3.4 (not tested).
+* Not compatible with Python 3.4 as yet. This code shouldn't be hard
+  to port, but beets is not yet Python 3 compatible.
 
 Install `beets`, `requests` and `lxml`.
 
@@ -72,8 +73,8 @@ Install `beets`, `requests` and `lxml`.
 
 If you're on Windows and have `pip` installed, `pip install beets requests`
 should work. `lxml` requires compiling, so the easiest way is to install
-it is by downloading a compiled version from
-[Christoph Gohlke's site](http://www.lfd.uci.edu/~gohlke/pythonlibs).
+it is by downloading the latest installer version for Python 2.7 from
+[PyPI](https://pypi.python.org/pypi/lxml).
 
 Even on Linux, compiling `lxml` may require more build dependencies.
 See [this discussion](https://stackoverflow.com/questions/6504810) for
@@ -83,4 +84,5 @@ distribution's package manager (e.g. `python-lxml`).
 ### Known issue (don't think there's an easy fix)
 * Printing tracklisting in Windows doesn't play nicely with non-ASCII
 characters; these are ignored. (Printing occurs if directory and
-fileprefix are invalid.)
+fileprefix are invalid.) You can try running `cmd /u` in a command
+prompt if you find this an issue (not tested).
