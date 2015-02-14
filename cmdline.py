@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from __future__ import print_function, unicode_literals
 from argparse import ArgumentParser, RawTextHelpFormatter
 import sys
 
@@ -38,11 +39,11 @@ def parse_arguments(args=sys.argv[1:]):
 def main():
     """Check arguments are retrieved."""
     args = parse_arguments()
-    print args
-    print "action", args.action
-    print "pid", args.pid
-    print "directory", args.directory
-    print "fileprefix", args.fileprefix
+    print(args)
+    print("action" + args.action)
+    print("pid" + args.pid)
+    print("directory" + args.directory)
+    print("fileprefix" + args.fileprefix)
 
 
 if __name__ == '__main__':
