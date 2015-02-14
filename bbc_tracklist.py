@@ -28,8 +28,8 @@ import codecs
 import os
 import sys
 
+import beets
 import lxml.html
-import mediafile
 import requests
 
 from cmdline import parse_arguments
@@ -158,7 +158,7 @@ def tag_audio_file(audio_file, tracklisting):
     Returns True if successful, False if not.
     """
     try:
-        f = mediafile.MediaFile(audio_file)
+        f = beets.mediafile.MediaFile(audio_file)
         print("Trying to tag {}".format(audio_file))
         # check if tracklisting already added
         if tracklisting in f.lyrics:

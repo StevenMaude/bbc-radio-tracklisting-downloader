@@ -4,8 +4,6 @@ and tags MP3 or M4A audio files or outputs to a text file. Licensed
 under GPL v3 (see COPYING).
 ***
 
-Uses code from [beets](https://github.com/sampsyo/beets) by Adrian Sampson.
-
 ### Usage examples
 Run `bbc_tracklist.py` from the command line.
 
@@ -68,13 +66,14 @@ are spaces in them; thanks [JackDandy](https://github.com/JackDandy))
   introduced in 2.7.3.)
 * Hopefully compatible with Python 3.4 (not tested).
 
-Requires `mutagen`, `requests` and `lxml`.
+Install `beets`, `requests` and `lxml`.
 
-If you're on Windows and have `pip` installed, `pip install mutagen requests`
-should work.
+`pip install -r requirements.txt` may work for you on Linux.
 
-`lxml` requires compiling, so the easiest way is to install it is by
-downloading a compiled version from [Christoph Gohlke's site](http://www.lfd.uci.edu/~gohlke/pythonlibs).
+If you're on Windows and have `pip` installed, `pip install beets requests`
+should work. `lxml` requires compiling, so the easiest way is to install
+it is by downloading a compiled version from
+[Christoph Gohlke's site](http://www.lfd.uci.edu/~gohlke/pythonlibs).
 
 Even on Linux, compiling `lxml` may require more build dependencies.
 See [this discussion](https://stackoverflow.com/questions/6504810) for
