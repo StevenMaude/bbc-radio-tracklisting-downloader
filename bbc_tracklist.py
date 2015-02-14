@@ -4,7 +4,7 @@
 # bbc_radio_tracklisting_downloader: Download radio tracklistings from
 # BBC's website and outputs to a text file.
 
-# Copyright 2013 Steven Maude
+# Copyright 2015 Steven Maude
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
