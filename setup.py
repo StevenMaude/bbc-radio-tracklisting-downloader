@@ -15,7 +15,7 @@ setup(
     # the version across setup.py and the project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
     version='0.0.1',
-    py_modules=['bbc_tracklist'],
+    py_modules=['bbc_tracklist', 'cmdline'],
     description='Download BBC radio show tracklistings',
     #long_description=long_description,
 
