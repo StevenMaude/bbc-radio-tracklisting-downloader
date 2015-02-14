@@ -104,7 +104,7 @@ def extract_listing(pid):
             artists = artist_names[0]
 
         try:
-            title, = track_div.xpath('.//p[@property="name"]/text()')
+            title, = track_div.xpath('.//p/span[@property="name"]/text()')
         except ValueError:
             title = ''
 
