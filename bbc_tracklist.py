@@ -152,32 +152,46 @@ def write_listing_to_textfile(textfile, tracklisting):
         text.write(tracklisting)
 
 
+class TagNotNeededError(Exception):
+    pass
+
+
+def save_tag_to_audio_file(audio_file, tracklisting):
+    """
+    Saves tag to audio file.
+    """
+    print("Trying to tag {}".format(audio_file))
+    f = beets.mediafile.MediaFile(audio_file)
+
+    if not f.lyrics:
+        print("No tracklisting present. Creating lyrics tag.")
+        f.lyrics = 'Tracklisting' + '\n' + tracklisting
+    elif tracklisting not in f.lyrics:
+        print("Appending tracklisting to existing lyrics tag.")
+        f.lyrics = f.lyrics + '\n\n' + 'Tracklisting' + '\n' + tracklisting
+    else:
+        print("Tracklisting already present. Not modifying file.")
+        raise TagNotNeededError
+
+    f.save()
+    print("Saved tag to file:", audio_file)
+
+
 def tag_audio_file(audio_file, tracklisting):
     """
-    Adds tracklisting as list to lyrics tag of audio file.
-    Returns True if successful, False if not.
+    Adds tracklisting as list to lyrics tag of audio file if not present.
+    Returns True if successful or not needed, False if tagging fails.
     """
     try:
-        f = beets.mediafile.MediaFile(audio_file)
-        print("Trying to tag {}".format(audio_file))
-        # check if tracklisting already added
-        if tracklisting in f.lyrics:
-            print ("Tracklisting already present. Not modifying file.")
-            return True
-        # check if lyrics tag exists already
-        elif len(f.lyrics) != 0:
-            print("Lyrics tag exists. Appending tracklisting to it.")
-            f.lyrics = f.lyrics + '\n\n' + 'Tracklisting' + '\n' + tracklisting
-        else:
-            print("No tracklisting present. Creating lyrics tag.")
-            f.lyrics = 'Tracklisting' + '\n' + tracklisting
-            #tag = ''.join(lines)
-        f.save()
-        print("Saved tag to file:", audio_file)
-        return True
+        save_tag_to_audio_file(audio_file, tracklisting)
     except IOError:
         print("Unable to save tag to file:", audio_file)
-        return False
+        audio_tagging_successful = False
+    except TagNotNeededError:
+        audio_tagging_successful = True
+    else:
+        audio_tagging_successful = True
+    return audio_tagging_successful
 
 
 def output_to_file(filename, tracklisting, action):
