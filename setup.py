@@ -20,7 +20,7 @@ setup(
     #long_description=long_description,
 
     # The project's main homepage.
-    url='https://github.com/StevenMaude/bbc_radio_tracklisting_downloader',
+    url='https://github.com/StevenMaude/bbc-radio-tracklisting-downloader',
 
     # Author details
     author='Steven Maude',
