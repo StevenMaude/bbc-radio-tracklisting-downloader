@@ -2,3 +2,7 @@
 *.txt
 *.pyc
 *.mp3
+
+build/
+dist/
+*.egg-info/
