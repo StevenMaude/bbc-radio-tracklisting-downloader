@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-# bbc_radio_tracklisting_downloader: Download radio tracklistings from
+# bbc-radio-tracklisting-downloader: Download radio tracklistings from
 # BBC's website and outputs to a text file.
 
 # Copyright 2015 Steven Maude
