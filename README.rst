@@ -1,6 +1,6 @@
-#######################################
-bbc\_radio\_tracklisting\_downloader.py
-#######################################
+#################################
+bbc-radio-tracklisting-downloader
+#################################
 
 A Python script that downloads radio tracklistings from BBC's website
 and tags MP3 or M4A audio files or outputs to a text file. Licensed
@@ -82,7 +82,7 @@ Installation requirements
 Install module directly
 =======================
 
-``pip install git+https://github.com/StevenMaude/bbc_radio_tracklisting_downloader.git``
+``pip install bbc-radio-tracklisting-downloader``
 should install the module and its dependencies. However, lxml may be an
 issue if you're on Windows (see below); make sure that's installed
 first.
