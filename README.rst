@@ -6,8 +6,6 @@ A Python script that downloads radio tracklistings from BBC's website
 and tags MP3 or M4A audio files or outputs to a text file. Licensed
 under GPL v3 (see COPYING).
 
---------------
-
 **************
 Usage examples
 **************
@@ -69,8 +67,6 @@ In Windows, you may need to quote the placeholders (presumably if there
 are spaces in them; thanks `JackDandy <https://github.com/JackDandy>`_)
 ``bbc_tracklist.py <pid> "<dir>" "<fileprefix>"``
 
---------------
-
 *************************
 Installation requirements
 *************************
@@ -112,8 +108,6 @@ distribution's package manager (e.g. ``python-lxml``).
 
 You can then grab a copy of the Python scripts from here or git clone
 the repository.
-
---------------
 
 *********************************************
 Known issue (don't think there's an easy fix)
