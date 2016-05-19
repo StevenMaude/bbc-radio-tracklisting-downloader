@@ -96,10 +96,13 @@ Installing by hand
 ``pip install -r requirements.txt`` may work for you on Linux.
 
 If you're on Windows and have ``pip`` installed,
-``pip install beets requests`` should work. ``lxml`` requires compiling,
-so the easiest way is to install it is by downloading the latest
-installer version for Python 2.7 from
-`PyPI <https://pypi.python.org/pypi/lxml>`_.
+``pip install beets requests lxml`` may work.
+
+``lxml`` requires compiling. Previously, the easiest way is to install
+it was by downloading the latest installer version for Python 2.7 from
+`PyPI <https://pypi.python.org/pypi/lxml>`_. However, the Python wheel
+that's available on PyPI might be installed automatically on Windows
+when you ``pip install lxml`` (not tested).
 
 Even on Linux, compiling ``lxml`` may require more build dependencies.
 See `this discussion <https://stackoverflow.com/questions/6504810>`_ for
