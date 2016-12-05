@@ -28,7 +28,7 @@ import codecs
 import os
 import sys
 
-import beets
+import mediafile
 import lxml.html
 import requests
 
@@ -161,7 +161,7 @@ def save_tag_to_audio_file(audio_file, tracklisting):
     Saves tag to audio file.
     """
     print("Trying to tag {}".format(audio_file))
-    f = beets.mediafile.MediaFile(audio_file)
+    f = mediafile.MediaFile(audio_file)
 
     if not f.lyrics:
         print("No tracklisting present. Creating lyrics tag.")
