@@ -19,8 +19,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-## maybe iterate over directory and subdirectories and try to download all
-## tracklistings for mp3s?
 from __future__ import print_function
 from __future__ import unicode_literals
 
@@ -94,7 +92,7 @@ def extract_listing(pid):
                                            '//span[@class="artist"]/text()')
         except ValueError:
             artist_names = ['']
-            
+
         if not artist_names:
             artist_names = ['']
 
@@ -249,6 +247,7 @@ def main():
     tracklisting = generate_output(listing, title, broadcast_date)
     output_to_file(filename, tracklisting, args.action)
     print("Done!")
+
 
 if __name__ == '__main__':
     main()
