@@ -184,7 +184,8 @@ def tag_audio_file(audio_file, tracklisting):
     """
     try:
         save_tag_to_audio_file(audio_file, tracklisting)
-    except IOError:
+    # TODO: is IOError required now or would the mediafile exception cover it?
+    except (IOError, mediafile.UnreadableFileError):
         print("Unable to save tag to file:", audio_file)
         audio_tagging_successful = False
     except TagNotNeededError:
