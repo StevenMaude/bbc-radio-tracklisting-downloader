@@ -75,9 +75,7 @@ Installation requirements
    (Raspbian and Ubuntu 12.04). (I suspect it doesn't work with Python
    versions earlier than this due to improvements in Python's HTMLParser
    introduced in 2.7.3.)
--  Not compatible with Python 3.4 as yet. This code shouldn't be hard to
-   port, but beets is not yet Python 3 compatible.
--  Requires ``beets``, ``requests`` and ``lxml``.
+-  Requires ``mediafile``, ``requests`` and ``lxml``.
 
 Install module directly
 =======================

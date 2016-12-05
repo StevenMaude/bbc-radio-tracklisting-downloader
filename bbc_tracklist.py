@@ -19,8 +19,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-## maybe iterate over directory and subdirectories and try to download all
-## tracklistings for mp3s?
 from __future__ import print_function
 from __future__ import unicode_literals
 
@@ -28,7 +26,7 @@ import codecs
 import os
 import sys
 
-import beets
+import mediafile
 import lxml.html
 import requests
 
@@ -94,7 +92,7 @@ def extract_listing(pid):
                                            '//span[@class="artist"]/text()')
         except ValueError:
             artist_names = ['']
-            
+
         if not artist_names:
             artist_names = ['']
 
@@ -161,7 +159,7 @@ def save_tag_to_audio_file(audio_file, tracklisting):
     Saves tag to audio file.
     """
     print("Trying to tag {}".format(audio_file))
-    f = beets.mediafile.MediaFile(audio_file)
+    f = mediafile.MediaFile(audio_file)
 
     if not f.lyrics:
         print("No tracklisting present. Creating lyrics tag.")
@@ -184,7 +182,8 @@ def tag_audio_file(audio_file, tracklisting):
     """
     try:
         save_tag_to_audio_file(audio_file, tracklisting)
-    except IOError:
+    # TODO: is IOError required now or would the mediafile exception cover it?
+    except (IOError, mediafile.UnreadableFileError):
         print("Unable to save tag to file:", audio_file)
         audio_tagging_successful = False
     except TagNotNeededError:
@@ -227,6 +226,7 @@ def write_text(filename, tracklisting):
 
 def tag_audio(filename, tracklisting):
     """Return True if audio tagged successfully; handle tagging audio."""
+    # TODO: maybe actually glob for files, then try tagging if present?
     if not(tag_audio_file(filename + '.m4a', tracklisting) or
            tag_audio_file(filename + '.mp3', tracklisting)):
         print("Cannot find or access any relevant M4A or MP3 audio file.")
@@ -247,6 +247,7 @@ def main():
     tracklisting = generate_output(listing, title, broadcast_date)
     output_to_file(filename, tracklisting, args.action)
     print("Done!")
+
 
 if __name__ == '__main__':
     main()
