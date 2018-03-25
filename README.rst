@@ -53,6 +53,9 @@ The script generates an output formatted as:
 get\_iplayer usage
 ==================
 
+**As of get_iplayer 3.13, there is a `tracklist` feature included, which you
+can use directly without needing this package installed at all.**
+
 If downloading a radio programme with
 `get\_iplayer <http://www.infradead.org/get_iplayer/html/get_iplayer.html>`_,
 adding an argument of the form
