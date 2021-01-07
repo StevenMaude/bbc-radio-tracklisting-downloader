@@ -1,4 +1,4 @@
-lxml==3.6.4
+lxml==4.6.2
 mediafile==0.0.1
 mutagen==1.35.1
 requests==2.20.0
