@@ -1,5 +1,5 @@
 lxml==4.6.5
 mediafile==0.0.1
 mutagen==1.35.1
-requests==2.20.0
+requests==2.31.0
 six==1.10.0
